@@ -1,0 +1,137 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Automated content pipeline test.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="data:," />
+    <style is:global>
+      :root {
+        --ink: #16161a;
+        --paper: #fbfaf7;
+        --muted: #6b6b70;
+        --rule: #e2e0da;
+        --accent: #2f4f4f;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-size: 18px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap {
+        max-width: 42rem;
+        margin: 0 auto;
+        padding: 3rem 1.25rem 5rem;
+      }
+
+      header.site {
+        border-bottom: 1px solid var(--rule);
+        padding-bottom: 1.25rem;
+        margin-bottom: 2.5rem;
+      }
+
+      header.site a {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--ink);
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        line-height: 1.2;
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      .meta {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      article + article {
+        margin-top: 2.5rem;
+        padding-top: 2.5rem;
+        border-top: 1px solid var(--rule);
+      }
+
+      article h2 {
+        font-size: 1.25rem;
+        margin: 0.4rem 0 0.4rem;
+        font-weight: 600;
+      }
+
+      article h2 a {
+        text-decoration: none;
+        color: var(--ink);
+      }
+
+      article h2 a:hover {
+        color: var(--accent);
+      }
+
+      article p {
+        margin: 0;
+        color: #3a3a40;
+      }
+
+      .source {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--rule);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.78rem;
+        color: var(--muted);
+        word-break: break-word;
+      }
+
+      .empty {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <a href="/">ai1994</a>
+      </header>
+      <slot />
+    </div>
+  </body>
+</html>
