@@ -20,6 +20,12 @@ const fmt = (d: Date) =>
 <Base title={post.data.title} description={post.data.description}>
   <div class="meta">{fmt(post.data.pubDate)}</div>
   <h1>{post.data.title}</h1>
+  {post.data.image && (
+    <figure class="hero">
+      <img src={post.data.image} alt={post.data.title} loading="lazy" />
+      {post.data.imageCredit && <figcaption>{post.data.imageCredit}</figcaption>}
+    </figure>
+  )}
   <Content />
   <p class="source">
     Source: {post.data.sourceName} — <a href={post.data.sourceUrl} rel="noopener">{post.data.sourceUrl}</a>
