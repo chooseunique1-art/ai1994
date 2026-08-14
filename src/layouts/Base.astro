@@ -114,7 +114,23 @@ const { title, description = 'Automated content pipeline test.' } = Astro.props;
         color: var(--muted);
         word-break: break-word;
       }
+.hero {
+        margin: 1.5rem 0 2rem;
+      }
 
+      .hero img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border: 1px solid var(--rule);
+      }
+
+      .hero figcaption {
+        margin-top: 0.5rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
       .empty {
         color: var(--muted);
         font-style: italic;
