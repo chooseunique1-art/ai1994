@@ -30,7 +30,9 @@ const blog = defineCollection({
 
     // 'draft' = written but not live. 'published' = appears on the site.
     // n8n should write 'draft' until you trust the pipeline.
-    status: z.enum(['draft', 'published']).default('draft'),
+    status: z.enum(['draft', 'published']).default('draft')
+    image: z.string().url().optional(),
+    imageCredit: z.string().optional(),
   }),
 });
 
