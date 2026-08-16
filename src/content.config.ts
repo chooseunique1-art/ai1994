@@ -23,7 +23,7 @@ const blog = defineCollection({
     pubDate: z.coerce.date(),
 
     // Where the facts came from. Required — no source, no post.
-    sourceUrl: z.string().url(),
+    sourceUrl: z.string().url().optional(),
 
     // Which outlet or dataset the source belongs to.
     sourceName: z.string().min(1),
