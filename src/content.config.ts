@@ -25,8 +25,12 @@ const blog = defineCollection({
     // Where the facts came from. Required — no source, no post.
     sourceUrl: z.string().url().optional(),
 
-    // Which outlet or dataset the source belongs to.
-    sourceName: z.string().min(1),
+sourceName: z.string().min(1),
+
+// Region tag assigned by the pipeline's Region classifier node.
+region: z.string().optional(),
+
+status: z.enum(['draft', 'published']).default('draft'),
 
     // 'draft' = written but not live. 'published' = appears on the site.
     // n8n should write 'draft' until you trust the pipeline.
