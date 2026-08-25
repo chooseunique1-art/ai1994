@@ -71,13 +71,10 @@ const breakingPost = posts.find((p) => p.data.breaking);
         </a>
 
         <ol class="ranked-list" data-ranked-list>
-          {rest.map((post, i) => (
+          {rest.map((post) => (
             <li class="ranked-row" data-region={post.data.region ?? ''}>
               <a class="story-link" href={`/blog/${post.id}/`}>
                 <div class={`story-row ${post.data.image ? '' : 'no-image'}`}>
-                  <span class="rank-num" data-rank>
-                    {i + 2}
-                  </span>
                   {post.data.image && <img class="thumb" src={post.data.image} alt="" loading="lazy" />}
                   <div class="story-body">
                     <h3 class="headline">{post.data.title}</h3>
@@ -127,17 +124,11 @@ const breakingPost = posts.find((p) => p.data.breaking);
 
   function applyFilter(region: string) {
     let visibleCount = 0;
-    let rank = 2;
 
     rows.forEach((row) => {
       const match = region === '' || row.dataset.region === region;
       row.hidden = !match;
-      if (match) {
-        const numEl = row.querySelector<HTMLElement>('[data-rank]');
-        if (numEl) numEl.textContent = String(rank);
-        rank++;
-        visibleCount++;
-      }
+      if (match) visibleCount++;
     });
 
     if (emptyMsg) emptyMsg.hidden = visibleCount > 0;

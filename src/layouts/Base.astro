@@ -378,21 +378,18 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         gap: 0.7rem;
       }
 
-      .rank-num {
-        flex: 0 0 auto;
-        width: 1.1rem;
-        font-family: ui-serif, Georgia, 'Times New Roman', serif;
-        font-size: 1.05rem;
-        color: var(--accent);
-        font-feature-settings: 'tnum';
-      }
-
       .story-row .thumb {
-        flex: 0 0 96px;
-        width: 96px;
-        height: 72px;
+        flex: 0 0 128px;
+        width: 128px;
+        height: 96px;
         object-fit: cover;
         background: var(--rule);
+      }
+
+      /* No thumbnail: a thin left rule anchors the row instead */
+      .story-row.no-image {
+        border-left: 2px solid var(--rule);
+        padding-left: 0.7rem;
       }
 
       .story-row .story-body {
