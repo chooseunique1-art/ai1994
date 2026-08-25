@@ -89,15 +89,30 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
 
       .search {
         position: relative;
-        flex: 1 1 auto;
+        flex: 0 1 auto;
         min-width: 0;
         margin-left: auto;
-        max-width: 15rem;
+        max-width: 9rem;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.55rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0.85rem;
+        height: 0.85rem;
+        fill: none;
+        stroke: var(--muted);
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        pointer-events: none;
       }
 
       .search-input {
         width: 100%;
-        padding: 0.4rem 0.6rem;
+        padding: 0.4rem 0.6rem 0.4rem 1.9rem;
         border: 1px solid var(--rule);
         border-radius: 2px;
         background: var(--paper);
@@ -433,6 +448,11 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
           padding: 0 2rem 4rem;
         }
 
+        /* More breathing room once the header isn't fighting a narrow viewport. */
+        .search {
+          max-width: 16rem;
+        }
+
         .content {
           display: flex;
           align-items: flex-start;
@@ -539,10 +559,14 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         <a href="/">ai1994</a>
 
         <div class="search" data-search>
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
           <input
             type="search"
             class="search-input"
-            placeholder="Search headlines…"
+            placeholder="Search…"
             aria-label="Search headlines"
             autocomplete="off"
             data-search-input
