@@ -13,21 +13,41 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-const fmt = (d: Date) =>
-  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 ---
 
 <Base title={post.data.title} description={post.data.description}>
-  <div class="meta">{fmt(post.data.pubDate)}</div>
-  <h1>{post.data.title}</h1>
-  {post.data.image && (
-    <figure class="hero">
-      <img src={post.data.image} alt={post.data.title} loading="lazy" />
-      {post.data.imageCredit && <figcaption>{post.data.imageCredit}</figcaption>}
-    </figure>
-  )}
-  <Content />
-<p class="source">
-  Source: {post.data.sourceName} — <a href={post.data.sourceUrl} rel="noopener">{post.data.sourceUrl}</a>
-</p>
+  <article>
+    {post.data.region && <span class="article-region">{post.data.region}</span>}
+    <h1>{post.data.title}</h1>
+    <div class="meta">
+      {fmt(post.data.pubDate)}
+      <span class="dot">·</span>
+      <span class="handle">{post.data.sourceName}</span>
+    </div>
+
+    {
+      post.data.image && (
+        <figure class="article-image">
+          <img src={post.data.image} alt="" />
+          {post.data.imageCredit && <figcaption>{post.data.imageCredit}</figcaption>}
+        </figure>
+      )
+    }
+
+    <div class="article-body">
+      <Content />
+    </div>
+
+    <p class="source-attribution">
+      Source:{' '}
+      {post.data.sourceUrl ? (
+        <a href={post.data.sourceUrl} rel="noopener">
+          {post.data.sourceName}
+        </a>
+      ) : (
+        post.data.sourceName
+      )}
+    </p>
+  </article>
 </Base>

@@ -22,21 +22,25 @@ const blog = defineCollection({
     // ISO date, e.g. 2026-08-14
     pubDate: z.coerce.date(),
 
-    // Where the facts came from. Required — no source, no post.
+    // Where the facts came from. Optional — some stories are aggregated
+    // from a source with no single linkable page.
     sourceUrl: z.string().url().optional(),
 
-sourceName: z.string().min(1),
+    // Which outlet, handle, or dataset the source belongs to.
+    sourceName: z.string().min(1),
 
-// Region tag assigned by the pipeline's Region classifier node.
-region: z.string().optional(),
-
-status: z.enum(['draft', 'published']).default('draft'),
+    // Geographic tag shown in the meta line, e.g. "Middle East".
+    region: z.string().min(1).optional(),
 
     // 'draft' = written but not live. 'published' = appears on the site.
     // n8n should write 'draft' until you trust the pipeline.
     status: z.enum(['draft', 'published']).default('draft'),
+
+    // Lead image. Optional — many stories are text-only by design.
     image: z.string().url().optional(),
-    imageCredit: z.string().optional(),
+
+    // Credit line for the image, e.g. "Reuters".
+    imageCredit: z.string().min(1).optional(),
   }),
 });
 
