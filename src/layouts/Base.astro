@@ -75,14 +75,28 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         margin-bottom: 0.25rem;
       }
 
-      header.site > a {
+      .brand {
         flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+
+      .brand a {
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.8rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         text-decoration: none;
         color: var(--ink);
+      }
+
+      .tagline {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.68rem;
+        color: var(--muted);
+        white-space: nowrap;
       }
 
       /* ---------- Header search ---------- */
@@ -556,7 +570,10 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
   <body>
     <div class="wrap">
       <header class="site">
-        <a href="/">ai1994</a>
+        <div class="brand">
+          <a href="/">Owaya</a>
+          <p class="tagline">Perspectives That Matter</p>
+        </div>
 
         <div class="search" data-search>
           <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">

@@ -1,4 +1,4 @@
-# ai1994
+# Owaya
 
 Automated content pipeline test. Astro static site, deployed on Vercel, written to by n8n.
 
