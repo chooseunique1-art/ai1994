@@ -17,37 +17,197 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
 ---
 
 <Base title={post.data.title} description={post.data.description}>
-  <article>
-    {post.data.region && <span class="article-region">{post.data.region}</span>}
-    <h1>{post.data.title}</h1>
-    <div class="meta">
-      {fmt(post.data.pubDate)}
-      <span class="dot">·</span>
-      <span class="handle">{post.data.sourceName}</span>
-    </div>
+  <!--
+    data-story-feed / data-story / data-sentinel: hooks for the "keep
+    reading" infinite scroll below. With JS disabled this renders as a
+    single ordinary article — the wrapper divs add no visible structure.
+  -->
+  <div class="story-feed" data-story-feed data-current-id={post.id}>
+    <article class="story" data-story data-story-id={post.id}>
+      {post.data.region && <span class="article-region">{post.data.region}</span>}
+      <h1>{post.data.title}</h1>
+      <div class="meta">
+        {fmt(post.data.pubDate)}
+        <span class="dot">·</span>
+        <span class="handle">{post.data.sourceName}</span>
+      </div>
 
-    {
-      post.data.image && (
-        <figure class="article-image">
-          <img src={post.data.image} alt="" />
-          {post.data.imageCredit && <figcaption>{post.data.imageCredit}</figcaption>}
-        </figure>
-      )
+      {
+        post.data.image && (
+          <figure class="article-image">
+            <img src={post.data.image} alt="" />
+            {post.data.imageCredit && <figcaption>{post.data.imageCredit}</figcaption>}
+          </figure>
+        )
+      }
+
+      <div class="article-body">
+        <Content />
+      </div>
+
+      <p class="source-attribution">
+        Source:{' '}
+        {post.data.sourceUrl ? (
+          <a href={post.data.sourceUrl} rel="noopener">
+            {post.data.sourceName}
+          </a>
+        ) : (
+          post.data.sourceName
+        )}
+      </p>
+    </article>
+
+    <div class="scroll-sentinel" data-sentinel></div>
+  </div>
+</Base>
+
+<script>
+  // Continuous "keep reading" scroll. Progressive enhancement only: the
+  // server already rendered one full, complete article above — this script
+  // just appends more of them as the reader nears the bottom, picking each
+  // next story by shared region + title/description word overlap with the
+  // story they just finished. Fully static-site friendly: "loading" a story
+  // means fetching its own real page and lifting its [data-story] node out
+  // of the response, so injected stories are pixel-identical to visiting
+  // that URL directly and pick up any future markup/style changes for free.
+
+  const feed = document.querySelector<HTMLElement>('[data-story-feed]');
+  const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
+
+  type IndexedPost = {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    source: string;
+    region: string | null;
+    pubDate: string;
+  };
+
+  const STOPWORDS = new Set([
+    'this', 'that', 'with', 'from', 'have', 'been', 'were', 'will', 'over',
+    'into', 'amid', 'says', 'said', 'their', 'about', 'more', 'than', 'after',
+    'before', 'while', 'during', 'which', 'what', 'when', 'where', 'would',
+    'could', 'should', 'also', 'they', 'them', 'these', 'those', 'here',
+    'there', 'still', 'even', 'both', 'each', 'other', 'some', 'such',
+  ]);
+
+  const significantWords = (text: string) =>
+    new Set(
+      text
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((w) => w.length > 3 && !STOPWORDS.has(w))
+    );
+
+  const relatedness = (a: IndexedPost, b: IndexedPost) => {
+    let score = 0;
+    if (a.region && b.region && a.region === b.region) score += 3;
+
+    const wa = significantWords(`${a.title} ${a.description}`);
+    const wb = significantWords(`${b.title} ${b.description}`);
+    for (const w of wa) if (wb.has(w)) score += 1;
+
+    return score;
+  };
+
+  if (feed && indexTag) {
+    const posts: IndexedPost[] = JSON.parse(indexTag.textContent || '[]');
+    const loadedIds = new Set<string>([feed.dataset.currentId || '']);
+    let chainAnchorId = feed.dataset.currentId || '';
+    let loading = false;
+
+    const pickNext = (): IndexedPost | null => {
+      const anchor = posts.find((p) => p.id === chainAnchorId);
+      const candidates = posts.filter((p) => !loadedIds.has(p.id));
+      if (!anchor || candidates.length === 0) return null;
+
+      return candidates
+        .map((p) => ({ p, score: relatedness(anchor, p) }))
+        .sort((a, b) => b.score - a.score || +new Date(b.p.pubDate) - +new Date(a.p.pubDate))[0].p;
+    };
+
+    const showEnd = () => {
+      const end = document.createElement('p');
+      end.className = 'end-of-feed';
+      end.innerHTML = "You're all caught up — <a href=\"/\">back to the homepage</a>.";
+      feed.append(end);
+    };
+
+    const sentinelObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            sentinelObserver.unobserve(entry.target);
+            loadNext();
+          }
+        }
+      },
+      { rootMargin: '600px 0px 600px 0px' }
+    );
+
+    // Tracks which loaded story is the one currently in view, so the URL
+    // bar and document title follow along as the reader scrolls.
+    const urlObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const id = (entry.target as HTMLElement).dataset.storyId;
+          const match = posts.find((p) => p.id === id);
+          if (id && match) {
+            history.replaceState(null, '', `/blog/${id}/`);
+            document.title = match.title;
+          }
+        }
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
+    );
+
+    async function loadNext() {
+      if (loading) return;
+      loading = true;
+
+      const next = pickNext();
+      if (!next) {
+        showEnd();
+        loading = false;
+        return;
+      }
+      loadedIds.add(next.id);
+
+      const sentinel = feed!.querySelector<HTMLElement>('[data-sentinel]')!;
+      const loadingEl = document.createElement('p');
+      loadingEl.className = 'story-loading';
+      loadingEl.textContent = 'Loading next story…';
+      sentinel.before(loadingEl);
+
+      try {
+        const res = await fetch(`/blog/${next.id}/`);
+        if (!res.ok) throw new Error(`fetch failed: ${res.status}`);
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newStory = doc.querySelector<HTMLElement>('[data-story]');
+        if (!newStory) throw new Error('story node not found in response');
+
+        const divider = document.createElement('div');
+        divider.className = 'story-divider';
+        divider.innerHTML = '<span>Next story</span>';
+
+        loadingEl.replaceWith(divider);
+        divider.after(newStory);
+
+        urlObserver.observe(newStory);
+        sentinelObserver.observe(sentinel);
+        chainAnchorId = next.id;
+      } catch (err) {
+        loadingEl.remove();
+        console.error('[keep-reading] failed to load next story', err);
+      } finally {
+        loading = false;
+      }
     }
 
-    <div class="article-body">
-      <Content />
-    </div>
-
-    <p class="source-attribution">
-      Source:{' '}
-      {post.data.sourceUrl ? (
-        <a href={post.data.sourceUrl} rel="noopener">
-          {post.data.sourceName}
-        </a>
-      ) : (
-        post.data.sourceName
-      )}
-    </p>
-  </article>
-</Base>
+    urlObserver.observe(document.querySelector('[data-story]')!);
+    sentinelObserver.observe(feed.querySelector('[data-sentinel]')!);
+  }
+</script>

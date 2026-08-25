@@ -7,9 +7,11 @@ interface Props {
 }
 const { title, description = 'Automated content pipeline test.' } = Astro.props;
 
-// Header search index. Built once at build time from every published post
-// (not just what any one page happens to render), so search works the same
-// on the homepage's capped desktop feed as it does on an article page.
+// Site-wide post index. Built once at build time from every published post
+// (not just what any one page happens to render). Two features share it:
+// the header search box below, and the "keep reading" infinite scroll on
+// article pages (src/pages/blog/[...slug].astro), which uses region +
+// title/description overlap to pick what loads next.
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 const searchIndex = (await getCollection('blog', ({ data }) => data.status === 'published'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -19,6 +21,8 @@ const searchIndex = (await getCollection('blog', ({ data }) => data.status === '
     description: post.data.description,
     date: fmt(post.data.pubDate),
     source: post.data.sourceName,
+    region: post.data.region ?? null,
+    pubDate: post.data.pubDate.toISOString(),
   }));
 // Guard against a stray "</script>" inside post text prematurely closing the tag.
 const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
@@ -367,6 +371,53 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         color: var(--accent);
       }
 
+      /* ---------- Keep-reading infinite scroll (article page) ---------- */
+
+      .story + .story-divider {
+        margin-top: 3rem;
+      }
+
+      .story-divider {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 3rem 0 2rem;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .story-divider::before,
+      .story-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--rule);
+      }
+
+      .story-loading {
+        margin: 3rem 0;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.78rem;
+        text-align: center;
+      }
+
+      .end-of-feed {
+        margin: 3rem 0 1rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--rule);
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      .end-of-feed a {
+        color: var(--accent);
+      }
+
       /* ---------- Desktop feed + sidebar (>=1024px) ---------- */
       /* Everything in this section is inert below the breakpoint: .sidebar
          is hidden by default and .beyond-cap only takes effect inside the
@@ -398,6 +449,13 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
            sidebar's "More headlines" list instead. */
         .feed .story-link.beyond-cap {
           display: none;
+        }
+
+        /* Article page(s): no sidebar here, so just cap the reading width
+           instead of letting text stretch across the full 1200px wrap. */
+        .story-feed {
+          max-width: 42rem;
+          margin: 0 auto;
         }
 
         .sidebar {
