@@ -1,9 +1,27 @@
 ---
+import { getCollection } from 'astro:content';
+
 interface Props {
   title: string;
   description?: string;
 }
 const { title, description = 'Automated content pipeline test.' } = Astro.props;
+
+// Header search index. Built once at build time from every published post
+// (not just what any one page happens to render), so search works the same
+// on the homepage's capped desktop feed as it does on an article page.
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+const searchIndex = (await getCollection('blog', ({ data }) => data.status === 'published'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map((post) => ({
+    id: post.id,
+    title: post.data.title,
+    description: post.data.description,
+    date: fmt(post.data.pubDate),
+    source: post.data.sourceName,
+  }));
+// Guard against a stray "</script>" inside post text prematurely closing the tag.
+const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -45,18 +63,100 @@ const { title, description = 'Automated content pipeline test.' } = Astro.props;
       }
 
       header.site {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
         border-bottom: 1px solid var(--rule);
         padding: 1.1rem 0;
         margin-bottom: 0.25rem;
       }
 
-      header.site a {
+      header.site > a {
+        flex: 0 0 auto;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.8rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         text-decoration: none;
         color: var(--ink);
+      }
+
+      /* ---------- Header search ---------- */
+
+      .search {
+        position: relative;
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-left: auto;
+        max-width: 15rem;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.4rem 0.6rem;
+        border: 1px solid var(--rule);
+        border-radius: 2px;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.85rem;
+      }
+
+      .search-input::placeholder {
+        color: var(--muted);
+      }
+
+      .search-results {
+        position: absolute;
+        z-index: 20;
+        top: calc(100% + 0.4rem);
+        right: 0;
+        width: max(100%, 20rem);
+        max-width: min(24rem, 90vw);
+        max-height: 70vh;
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        background: var(--paper);
+        border: 1px solid var(--rule);
+        box-shadow: 0 4px 14px rgba(22, 22, 26, 0.08);
+      }
+
+      .search-results li + li {
+        border-top: 1px solid var(--rule);
+      }
+
+      .search-results a {
+        display: block;
+        padding: 0.6rem 0.75rem;
+        text-decoration: none;
+      }
+
+      .search-results a:hover,
+      .search-results a:focus-visible {
+        background: var(--rule);
+      }
+
+      .search-result-title {
+        display: block;
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1.3;
+        color: var(--ink);
+      }
+
+      .search-results .meta {
+        display: block;
+        margin-top: 0.25rem;
+      }
+
+      .search-empty {
+        padding: 0.75rem;
+        color: var(--muted);
+        font-style: italic;
+        font-size: 0.85rem;
       }
 
       a {
@@ -379,8 +479,108 @@ const { title, description = 'Automated content pipeline test.' } = Astro.props;
     <div class="wrap">
       <header class="site">
         <a href="/">ai1994</a>
+
+        <div class="search" data-search>
+          <input
+            type="search"
+            class="search-input"
+            placeholder="Search headlines…"
+            aria-label="Search headlines"
+            autocomplete="off"
+            data-search-input
+          />
+          <ul class="search-results" data-search-results hidden></ul>
+        </div>
       </header>
       <slot />
     </div>
+
+    <script type="application/json" data-search-index set:html={searchIndexJson} />
+
+    <script>
+      const container = document.querySelector<HTMLElement>('[data-search]');
+      const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+      const results = document.querySelector<HTMLUListElement>('[data-search-results]');
+      const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
+
+      type SearchPost = { id: string; title: string; description: string; date: string; source: string };
+
+      if (container && input && results && indexTag) {
+        const posts: SearchPost[] = JSON.parse(indexTag.textContent || '[]');
+        const MAX_RESULTS = 8;
+
+        const render = (matches: SearchPost[], query: string) => {
+          results.innerHTML = '';
+
+          if (matches.length === 0) {
+            const empty = document.createElement('li');
+            empty.className = 'search-empty';
+            empty.textContent = `No headlines match "${query}".`;
+            results.append(empty);
+            return;
+          }
+
+          for (const post of matches.slice(0, MAX_RESULTS)) {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `/blog/${post.id}/`;
+
+            const titleEl = document.createElement('span');
+            titleEl.className = 'search-result-title';
+            titleEl.textContent = post.title;
+
+            const metaEl = document.createElement('span');
+            metaEl.className = 'meta';
+            metaEl.textContent = `${post.date} · ${post.source}`;
+
+            a.append(titleEl, metaEl);
+            li.append(a);
+            results.append(li);
+          }
+        };
+
+        const close = () => {
+          results.hidden = true;
+          results.innerHTML = '';
+        };
+
+        input.addEventListener('input', () => {
+          const query = input.value.trim().toLowerCase();
+
+          if (!query) {
+            close();
+            return;
+          }
+
+          const matches = posts.filter(
+            (post) =>
+              post.title.toLowerCase().includes(query) || post.description.toLowerCase().includes(query)
+          );
+
+          render(matches, input.value.trim());
+          results.hidden = false;
+        });
+
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            close();
+            input.blur();
+          } else if (event.key === 'ArrowDown' && !results.hidden) {
+            event.preventDefault();
+            results.querySelector('a')?.focus();
+          }
+        });
+
+        input.addEventListener('focus', () => {
+          if (input.value.trim() && results.childElementCount > 0) {
+            results.hidden = false;
+          }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!container.contains(event.target as Node)) close();
+        });
+      }
+    </script>
   </body>
 </html>
