@@ -239,29 +239,81 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
 
       /* ---------- Feed (index page) ---------- */
 
-      .feed {
+      .chip-rail {
         display: flex;
-        flex-direction: column;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding: 0.25rem 0 1.1rem;
+        margin-bottom: 0.25rem;
+        scrollbar-width: none;
       }
 
-      .story-link {
-        display: block;
-        text-decoration: none;
-        color: inherit;
-        padding: 1.1rem 0;
-        border-top: 1px solid var(--rule);
+      .chip-rail::-webkit-scrollbar {
+        display: none;
       }
 
-      .story-link:hover .headline {
+      .chip {
+        flex: 0 0 auto;
+        padding: 0.35rem 0.75rem;
+        border: 1px solid var(--rule);
+        border-radius: 3px;
+        background: transparent;
+        color: var(--muted);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+
+      .chip.is-active {
+        border-color: var(--accent);
         color: var(--accent);
       }
 
-      /* Top story */
-      .story-link.top-story {
-        border-top: none;
+      .breaking-banner {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.75rem;
+        margin-bottom: 1.1rem;
+        background: rgba(47, 79, 79, 0.08);
+        border: 1px solid var(--accent);
+        border-radius: 2px;
+        text-decoration: none;
+        color: inherit;
       }
 
-      .top-story .top-image {
+      .breaking-label {
+        flex: 0 0 auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .breaking-headline {
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: var(--ink);
+      }
+
+      /* Lead story */
+      .lead {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding-bottom: 1.1rem;
+        border-bottom: 1px solid var(--rule);
+        margin-bottom: 0.25rem;
+      }
+
+      .lead:hover .headline {
+        color: var(--accent);
+      }
+
+      .lead-image {
         display: block;
         width: 100%;
         height: auto;
@@ -271,21 +323,22 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         background: var(--rule);
       }
 
-      .top-story .region-label {
+      .eyebrow {
         display: block;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.68rem;
-        letter-spacing: 0.08em;
+        font-weight: 600;
+        letter-spacing: 0.09em;
         text-transform: uppercase;
-        color: var(--muted);
+        color: var(--accent);
         margin-bottom: 0.35rem;
       }
 
-      .top-story .headline {
+      .lead .headline {
         font-size: 1.3rem;
       }
 
-      .top-story .brief {
+      .lead .brief {
         font-family: ui-sans-serif, system-ui, sans-serif;
         font-size: 0.95rem;
         color: #3a3a40;
@@ -293,17 +346,51 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         line-height: 1.4;
       }
 
-      /* Ordinary story row */
+      /* Ranked list */
+      .ranked-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .ranked-row {
+        border-top: 1px solid var(--rule);
+      }
+
+      .ranked-row[hidden] {
+        display: none;
+      }
+
+      .ranked-row .story-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: 1.1rem 0;
+      }
+
+      .ranked-row .story-link:hover .headline {
+        color: var(--accent);
+      }
+
       .story-row {
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: 0.7rem;
+      }
+
+      .rank-num {
+        flex: 0 0 auto;
+        width: 1.1rem;
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-size: 1.05rem;
+        color: var(--accent);
+        font-feature-settings: 'tnum';
       }
 
       .story-row .thumb {
-        flex: 0 0 108px;
-        width: 108px;
-        height: 82px;
+        flex: 0 0 96px;
+        width: 96px;
+        height: 72px;
         object-fit: cover;
         background: var(--rule);
       }
@@ -321,20 +408,51 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         margin-top: 0.35rem;
       }
 
-      /* No-image story: thin left rule fills the thumbnail's visual slot */
-      .story-row.no-image {
-        border-left: 2px solid var(--rule);
-        padding-left: 0.75rem;
+      .ranked-empty {
+        padding: 1.5rem 0;
+        color: var(--muted);
+        font-style: italic;
+        font-size: 0.9rem;
+        border-top: 1px solid var(--rule);
       }
 
-      .story-row.no-image .region-label {
-        display: block;
+      /* Section navigation, echoed at the bottom of a long list */
+      .sections-grid {
+        margin-top: 1.5rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--rule);
+      }
+
+      .sections-label {
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.68rem;
-        letter-spacing: 0.08em;
+        font-weight: 600;
+        letter-spacing: 0.09em;
         text-transform: uppercase;
         color: var(--muted);
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .sections-items {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 1rem;
+      }
+
+      .section-link {
+        text-align: left;
+        padding: 0.4rem 0;
+        border: none;
+        background: none;
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.88rem;
+        cursor: pointer;
+      }
+
+      .section-link:hover,
+      .section-link.is-active {
+        color: var(--accent);
       }
 
       /* ---------- Article page ---------- */
@@ -450,14 +568,7 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         color: var(--accent);
       }
 
-      /* ---------- Desktop feed + sidebar (>=1024px) ---------- */
-      /* Everything in this section is inert below the breakpoint: .sidebar
-         is hidden by default and .beyond-cap only takes effect inside the
-         media query, so the mobile layout above is untouched. */
-
-      .sidebar {
-        display: none;
-      }
+      /* ---------- Desktop (>=1024px) ---------- */
 
       @media (min-width: 1024px) {
         .wrap {
@@ -470,102 +581,18 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
           max-width: 16rem;
         }
 
-        .content {
-          display: flex;
-          align-items: flex-start;
-          gap: 3rem;
-        }
-
-        .feed {
-          flex: 1 1 680px;
-          max-width: 680px;
-          min-width: 0;
-        }
-
-        /* Main column shows the top story + 11 rows; the rest live in the
-           sidebar's "More headlines" list instead. */
-        .feed .story-link.beyond-cap {
-          display: none;
-        }
-
-        /* Article page(s): no sidebar here, so just cap the reading width
-           instead of letting text stretch across the full 1200px wrap. */
+        /* No sidebar in this layout — cap the reading width on the
+           homepage's ranked list and on article pages instead of letting
+           either stretch across the full 1200px wrap. */
+        .home,
         .story-feed {
           max-width: 42rem;
           margin: 0 auto;
         }
 
-        .sidebar {
-          display: block;
-          flex: 0 0 320px;
-          width: 320px;
-          position: sticky;
-          top: 2rem;
-        }
-
-        .sidebar-section + .sidebar-section {
-          margin-top: 2rem;
-        }
-
-        .sidebar-heading {
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-          font-size: 0.72rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--muted);
-          margin: 0 0 0.75rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 1px solid var(--rule);
-        }
-
-        .region-list,
-        .headline-list {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-
-        .region-list li + li,
-        .headline-list li + li {
-          margin-top: 0.6rem;
-        }
-
-        .region-list a {
-          text-decoration: none;
-          font-size: 0.9rem;
-        }
-
-        .region-list a:hover {
-          color: var(--accent);
-        }
-
-        .headline-list a {
-          display: block;
-          text-decoration: none;
-          padding-top: 0.6rem;
-          border-top: 1px solid var(--rule);
-        }
-
-        .headline-list li:first-child a {
-          border-top: none;
-          padding-top: 0;
-        }
-
-        .headline-list a:hover .headline-text {
-          color: var(--accent);
-        }
-
-        .headline-list .headline-text {
-          display: block;
-          font-family: ui-serif, Georgia, 'Times New Roman', serif;
-          font-weight: 600;
-          font-size: 0.92rem;
-          line-height: 1.3;
-        }
-
-        .headline-list .meta {
-          display: block;
-          margin-top: 0.25rem;
+        .chip-rail {
+          overflow-x: visible;
+          flex-wrap: wrap;
         }
       }
     </style>

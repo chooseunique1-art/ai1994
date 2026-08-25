@@ -41,6 +41,11 @@ const blog = defineCollection({
 
     // Credit line for the image, e.g. "Reuters".
     imageCredit: z.string().min(1).optional(),
+
+    // Genuinely urgent, developing story — shows the homepage's breaking
+    // banner. Leave false/unset for normal coverage; don't set this just
+    // to get a story more visibility.
+    breaking: z.boolean().default(false),
   }),
 });
 
