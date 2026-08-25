@@ -89,27 +89,32 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         gap: 0.15rem;
       }
 
-      /* Restrained nameplate: upright serif wordmark (same face as the
-         headlines below it, normal weight — no italic, no rule), with a
-         quiet lowercase sans tagline directly underneath. */
+      /* Nameplate: upright serif wordmark (same face as the headlines below
+         it, normal weight — no italic, no rule), letter-spaced caps like
+         the reference masthead. Tagline in small spaced mono caps, in the
+         site's own accent color rather than the reference's gold. */
       .wordmark {
         font-family: ui-serif, Georgia, 'Times New Roman', serif;
         font-weight: 400;
         font-size: 1.3rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
         line-height: 1;
         text-decoration: none;
         color: var(--ink);
       }
 
       .tagline {
-        margin: 0;
-        font-family: ui-sans-serif, system-ui, sans-serif;
-        font-size: 0.78rem;
-        color: var(--muted);
+        margin: 0.25rem 0 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
         white-space: nowrap;
       }
 
-      /* ---------- Header icon buttons (menu + search) ---------- */
+      /* ---------- Header icon buttons ---------- */
 
       .icon-btn {
         display: flex;
@@ -134,7 +139,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         stroke-linejoin: round;
       }
 
-      /* ---------- Header menu ---------- */
+      /* ---------- Header menu: search + section nav, one panel ---------- */
 
       .menu {
         position: relative;
@@ -144,49 +149,65 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       .menu-panel {
         position: absolute;
         z-index: 20;
-        top: calc(100% + 0.4rem);
+        top: calc(100% + 0.6rem);
         left: 0;
-        min-width: 11rem;
+        width: min(22rem, calc(100vw - 2.4rem));
+        max-height: calc(100vh - 6rem);
+        overflow-y: auto;
         background: var(--paper);
         border: 1px solid var(--rule);
-        box-shadow: 0 4px 14px rgba(22, 22, 26, 0.08);
-        padding: 0.4rem 0;
+        box-shadow: 0 8px 24px rgba(22, 22, 26, 0.1);
+        padding: 1.1rem;
       }
 
-      .menu-panel a {
-        display: block;
-        padding: 0.5rem 0.9rem;
+      .menu-block + .menu-block {
+        margin-top: 1.1rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--rule);
+      }
+
+      .menu-label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.6rem;
+      }
+
+      .menu-nav {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .menu-nav a {
+        padding: 0.5rem 0;
         text-decoration: none;
         color: var(--ink);
         font-family: ui-sans-serif, system-ui, sans-serif;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
+        border-top: 1px solid var(--rule);
       }
 
-      .menu-panel a:hover,
-      .menu-panel a:focus-visible {
+      .menu-nav a:first-of-type {
+        border-top: none;
+      }
+
+      .menu-nav a:hover,
+      .menu-nav a:focus-visible {
         color: var(--accent);
-        background: rgba(47, 79, 79, 0.06);
       }
 
-      /* ---------- Header search ---------- */
+      /* Search field, nested inside the menu panel */
 
-      .search {
+      .search-field {
         position: relative;
-        flex: 0 0 auto;
-        margin-left: auto;
       }
 
-      .search-box {
+      .search-field .search-icon {
         position: absolute;
-        z-index: 20;
-        top: calc(100% + 0.4rem);
-        right: 0;
-        width: 14rem;
-      }
-
-      .search-box .search-icon {
-        position: absolute;
-        left: 0.55rem;
+        left: 0.6rem;
         top: 50%;
         transform: translateY(-50%);
         width: 0.85rem;
@@ -201,14 +222,13 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
       .search-input {
         width: 100%;
-        padding: 0.45rem 0.6rem 0.45rem 1.9rem;
+        padding: 0.5rem 0.7rem 0.5rem 2rem;
         border: 1px solid var(--rule);
         border-radius: 2px;
         background: var(--paper);
         color: var(--ink);
         font-family: ui-sans-serif, system-ui, sans-serif;
-        font-size: 0.85rem;
-        box-shadow: 0 4px 14px rgba(22, 22, 26, 0.08);
+        font-size: 0.88rem;
       }
 
       .search-input::placeholder {
@@ -216,20 +236,11 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       }
 
       .search-results {
-        position: absolute;
-        z-index: 20;
-        top: calc(100% + 0.4rem);
-        right: 0;
-        width: max(100%, 20rem);
-        max-width: min(24rem, 90vw);
-        max-height: 70vh;
-        overflow-y: auto;
-        margin: 0;
+        margin: 0.75rem 0 0;
         padding: 0;
         list-style: none;
-        background: var(--paper);
-        border: 1px solid var(--rule);
-        box-shadow: 0 4px 14px rgba(22, 22, 26, 0.08);
+        max-height: 40vh;
+        overflow-y: auto;
       }
 
       .search-results li + li {
@@ -238,13 +249,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
       .search-results a {
         display: block;
-        padding: 0.6rem 0.75rem;
+        padding: 0.6rem 0.1rem;
         text-decoration: none;
-      }
-
-      .search-results a:hover,
-      .search-results a:focus-visible {
-        background: var(--rule);
       }
 
       .search-result-title {
@@ -256,13 +262,18 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         color: var(--ink);
       }
 
+      .search-results a:hover .search-result-title,
+      .search-results a:focus-visible .search-result-title {
+        color: var(--accent);
+      }
+
       .search-results .meta {
         display: block;
         margin-top: 0.25rem;
       }
 
       .search-empty {
-        padding: 0.75rem;
+        padding: 0.6rem 0.1rem;
         color: var(--muted);
         font-style: italic;
         font-size: 0.85rem;
@@ -647,8 +658,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         }
 
         /* More breathing room once the header isn't fighting a narrow viewport. */
-        .search-box {
-          width: 18rem;
+        .menu-panel {
+          width: 24rem;
         }
 
         /* No sidebar in this layout — cap the reading width on the
@@ -678,42 +689,40 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
               <line x1="3" y1="17" x2="21" y2="17" />
             </svg>
           </button>
+
           <div class="menu-panel" data-menu-panel hidden>
-            <a href="/">Home</a>
-            {menuRegions.map((region) => (
-              <a href={`/?region=${encodeURIComponent(region)}`}>{region}</a>
-            ))}
+            <div class="menu-block">
+              <div class="menu-label">Search</div>
+              <div class="search-field">
+                <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="search"
+                  class="search-input"
+                  placeholder="Search headlines…"
+                  aria-label="Search headlines"
+                  autocomplete="off"
+                  data-search-input
+                />
+              </div>
+              <ul class="search-results" data-search-results hidden></ul>
+            </div>
+
+            <div class="menu-block menu-nav">
+              <div class="menu-label">Sections</div>
+              <a href="/">Home</a>
+              {menuRegions.map((region) => (
+                <a href={`/?region=${encodeURIComponent(region)}`}>{region}</a>
+              ))}
+            </div>
           </div>
         </div>
 
         <div class="brand">
           <a href="/" class="wordmark">Owaya</a>
           <p class="tagline">perspectives that matter</p>
-        </div>
-
-        <div class="search" data-search>
-          <button type="button" class="icon-btn" data-search-toggle aria-expanded="false" aria-label="Open search">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </button>
-
-          <div class="search-box" data-search-box hidden>
-            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              type="search"
-              class="search-input"
-              placeholder="Search…"
-              aria-label="Search headlines"
-              autocomplete="off"
-              data-search-input
-            />
-            <ul class="search-results" data-search-results hidden></ul>
-          </div>
         </div>
       </header>
       <slot />
@@ -722,28 +731,40 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     <script type="application/json" data-search-index set:html={searchIndexJson} />
 
     <script>
-      // --- Header menu: hamburger toggles a small dropdown of Home + regions ---
+      // --- Header menu: hamburger opens one panel holding both search and
+      // section nav. Opening it focuses the search field directly. ---
       const menu = document.querySelector<HTMLElement>('[data-menu]');
       const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
       const menuPanel = document.querySelector<HTMLElement>('[data-menu-panel]');
+      const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+      const results = document.querySelector<HTMLUListElement>('[data-search-results]');
+      const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
+
+      type SearchPost = { id: string; title: string; description: string; date: string; source: string };
 
       if (menu && menuToggle && menuPanel) {
         const closeMenu = () => {
           menuPanel.hidden = true;
           menuToggle.setAttribute('aria-expanded', 'false');
+          if (results) {
+            results.hidden = true;
+            results.innerHTML = '';
+          }
+          if (input) input.value = '';
         };
 
         menuToggle.addEventListener('click', () => {
           const willOpen = menuPanel.hidden;
           menuPanel.hidden = !willOpen;
           menuToggle.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen) input?.focus();
         });
 
         document.addEventListener('click', (event) => {
           if (!menu.contains(event.target as Node)) closeMenu();
         });
 
-        menuPanel.addEventListener('keydown', (event) => {
+        menu.addEventListener('keydown', (event) => {
           if (event.key === 'Escape') {
             closeMenu();
             menuToggle.focus();
@@ -751,17 +772,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         });
       }
 
-      // --- Header search: icon expands into the search box on click ---
-      const container = document.querySelector<HTMLElement>('[data-search]');
-      const searchToggle = document.querySelector<HTMLButtonElement>('[data-search-toggle]');
-      const searchBox = document.querySelector<HTMLElement>('[data-search-box]');
-      const input = document.querySelector<HTMLInputElement>('[data-search-input]');
-      const results = document.querySelector<HTMLUListElement>('[data-search-results]');
-      const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
-
-      type SearchPost = { id: string; title: string; description: string; date: string; source: string };
-
-      if (container && searchToggle && searchBox && input && results && indexTag) {
+      // --- Search, nested inside the menu panel ---
+      if (input && results && indexTag) {
         const posts: SearchPost[] = JSON.parse(indexTag.textContent || '[]');
         const MAX_RESULTS = 8;
 
@@ -795,33 +807,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           }
         };
 
-        const closeResults = () => {
-          results.hidden = true;
-          results.innerHTML = '';
-        };
-
-        const closeSearch = () => {
-          searchBox.hidden = true;
-          searchToggle.setAttribute('aria-expanded', 'false');
-          closeResults();
-          input.value = '';
-        };
-
-        searchToggle.addEventListener('click', () => {
-          if (searchBox.hidden) {
-            searchBox.hidden = false;
-            searchToggle.setAttribute('aria-expanded', 'true');
-            input.focus();
-          } else {
-            closeSearch();
-          }
-        });
-
         input.addEventListener('input', () => {
           const query = input.value.trim().toLowerCase();
 
           if (!query) {
-            closeResults();
+            results.hidden = true;
+            results.innerHTML = '';
             return;
           }
 
@@ -835,23 +826,18 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         });
 
         input.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') {
-            closeSearch();
-            searchToggle.focus();
-          } else if (event.key === 'ArrowDown' && !results.hidden) {
+          if (event.key === 'ArrowDown' && !results.hidden) {
             event.preventDefault();
             results.querySelector('a')?.focus();
           }
+          // Escape is handled by the menu-level listener above (bubbles up)
+          // and closes the whole panel, not just the results.
         });
 
         input.addEventListener('focus', () => {
           if (input.value.trim() && results.childElementCount > 0) {
             results.hidden = false;
           }
-        });
-
-        document.addEventListener('click', (event) => {
-          if (!container.contains(event.target as Node)) closeSearch();
         });
       }
     </script>
