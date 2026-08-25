@@ -26,6 +26,13 @@ const searchIndex = (await getCollection('blog', ({ data }) => data.status === '
   }));
 // Guard against a stray "</script>" inside post text prematurely closing the tag.
 const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
+
+// Header menu: same regions the homepage's chip rail uses, off the index
+// already built above — no extra query. Links carry ?region= so the
+// homepage can pick up the filter after navigating there from any page.
+const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r is string => Boolean(r)))].sort(
+  (a, b) => a.localeCompare(b)
+);
 ---
 
 <!doctype html>
@@ -102,17 +109,82 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         white-space: nowrap;
       }
 
+      /* ---------- Header icon buttons (menu + search) ---------- */
+
+      .icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: none;
+        background: none;
+        color: var(--ink);
+        cursor: pointer;
+      }
+
+      .icon-btn svg {
+        width: 1.05rem;
+        height: 1.05rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ---------- Header menu ---------- */
+
+      .menu {
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .menu-panel {
+        position: absolute;
+        z-index: 20;
+        top: calc(100% + 0.4rem);
+        left: 0;
+        min-width: 11rem;
+        background: var(--paper);
+        border: 1px solid var(--rule);
+        box-shadow: 0 4px 14px rgba(22, 22, 26, 0.08);
+        padding: 0.4rem 0;
+      }
+
+      .menu-panel a {
+        display: block;
+        padding: 0.5rem 0.9rem;
+        text-decoration: none;
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.88rem;
+      }
+
+      .menu-panel a:hover,
+      .menu-panel a:focus-visible {
+        color: var(--accent);
+        background: rgba(47, 79, 79, 0.06);
+      }
+
       /* ---------- Header search ---------- */
 
       .search {
         position: relative;
-        flex: 0 1 auto;
-        min-width: 0;
+        flex: 0 0 auto;
         margin-left: auto;
-        max-width: 9rem;
       }
 
-      .search-icon {
+      .search-box {
+        position: absolute;
+        z-index: 20;
+        top: calc(100% + 0.4rem);
+        right: 0;
+        width: 14rem;
+      }
+
+      .search-box .search-icon {
         position: absolute;
         left: 0.55rem;
         top: 50%;
@@ -129,13 +201,14 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
 
       .search-input {
         width: 100%;
-        padding: 0.4rem 0.6rem 0.4rem 1.9rem;
+        padding: 0.45rem 0.6rem 0.45rem 1.9rem;
         border: 1px solid var(--rule);
         border-radius: 2px;
         background: var(--paper);
         color: var(--ink);
         font-family: ui-sans-serif, system-ui, sans-serif;
         font-size: 0.85rem;
+        box-shadow: 0 4px 14px rgba(22, 22, 26, 0.08);
       }
 
       .search-input::placeholder {
@@ -574,8 +647,8 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         }
 
         /* More breathing room once the header isn't fighting a narrow viewport. */
-        .search {
-          max-width: 16rem;
+        .search-box {
+          width: 18rem;
         }
 
         /* No sidebar in this layout — cap the reading width on the
@@ -597,25 +670,50 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
   <body>
     <div class="wrap">
       <header class="site">
+        <div class="menu" data-menu>
+          <button type="button" class="icon-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="3" y1="7" x2="21" y2="7" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="17" x2="21" y2="17" />
+            </svg>
+          </button>
+          <div class="menu-panel" data-menu-panel hidden>
+            <a href="/">Home</a>
+            {menuRegions.map((region) => (
+              <a href={`/?region=${encodeURIComponent(region)}`}>{region}</a>
+            ))}
+          </div>
+        </div>
+
         <div class="brand">
           <a href="/" class="wordmark">Owaya</a>
           <p class="tagline">perspectives that matter</p>
         </div>
 
         <div class="search" data-search>
-          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="search"
-            class="search-input"
-            placeholder="Search…"
-            aria-label="Search headlines"
-            autocomplete="off"
-            data-search-input
-          />
-          <ul class="search-results" data-search-results hidden></ul>
+          <button type="button" class="icon-btn" data-search-toggle aria-expanded="false" aria-label="Open search">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+
+          <div class="search-box" data-search-box hidden>
+            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="search"
+              class="search-input"
+              placeholder="Search…"
+              aria-label="Search headlines"
+              autocomplete="off"
+              data-search-input
+            />
+            <ul class="search-results" data-search-results hidden></ul>
+          </div>
         </div>
       </header>
       <slot />
@@ -624,14 +722,46 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
     <script type="application/json" data-search-index set:html={searchIndexJson} />
 
     <script>
+      // --- Header menu: hamburger toggles a small dropdown of Home + regions ---
+      const menu = document.querySelector<HTMLElement>('[data-menu]');
+      const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+      const menuPanel = document.querySelector<HTMLElement>('[data-menu-panel]');
+
+      if (menu && menuToggle && menuPanel) {
+        const closeMenu = () => {
+          menuPanel.hidden = true;
+          menuToggle.setAttribute('aria-expanded', 'false');
+        };
+
+        menuToggle.addEventListener('click', () => {
+          const willOpen = menuPanel.hidden;
+          menuPanel.hidden = !willOpen;
+          menuToggle.setAttribute('aria-expanded', String(willOpen));
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!menu.contains(event.target as Node)) closeMenu();
+        });
+
+        menuPanel.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeMenu();
+            menuToggle.focus();
+          }
+        });
+      }
+
+      // --- Header search: icon expands into the search box on click ---
       const container = document.querySelector<HTMLElement>('[data-search]');
+      const searchToggle = document.querySelector<HTMLButtonElement>('[data-search-toggle]');
+      const searchBox = document.querySelector<HTMLElement>('[data-search-box]');
       const input = document.querySelector<HTMLInputElement>('[data-search-input]');
       const results = document.querySelector<HTMLUListElement>('[data-search-results]');
       const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
 
       type SearchPost = { id: string; title: string; description: string; date: string; source: string };
 
-      if (container && input && results && indexTag) {
+      if (container && searchToggle && searchBox && input && results && indexTag) {
         const posts: SearchPost[] = JSON.parse(indexTag.textContent || '[]');
         const MAX_RESULTS = 8;
 
@@ -665,16 +795,33 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
           }
         };
 
-        const close = () => {
+        const closeResults = () => {
           results.hidden = true;
           results.innerHTML = '';
         };
+
+        const closeSearch = () => {
+          searchBox.hidden = true;
+          searchToggle.setAttribute('aria-expanded', 'false');
+          closeResults();
+          input.value = '';
+        };
+
+        searchToggle.addEventListener('click', () => {
+          if (searchBox.hidden) {
+            searchBox.hidden = false;
+            searchToggle.setAttribute('aria-expanded', 'true');
+            input.focus();
+          } else {
+            closeSearch();
+          }
+        });
 
         input.addEventListener('input', () => {
           const query = input.value.trim().toLowerCase();
 
           if (!query) {
-            close();
+            closeResults();
             return;
           }
 
@@ -689,8 +836,8 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
 
         input.addEventListener('keydown', (event) => {
           if (event.key === 'Escape') {
-            close();
-            input.blur();
+            closeSearch();
+            searchToggle.focus();
           } else if (event.key === 'ArrowDown' && !results.hidden) {
             event.preventDefault();
             results.querySelector('a')?.focus();
@@ -704,7 +851,7 @@ const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
         });
 
         document.addEventListener('click', (event) => {
-          if (!container.contains(event.target as Node)) close();
+          if (!container.contains(event.target as Node)) closeSearch();
         });
       }
     </script>

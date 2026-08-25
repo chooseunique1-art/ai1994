@@ -143,4 +143,11 @@ const breakingPost = posts.find((p) => p.data.breaking);
   chips.forEach((chip) => {
     chip.addEventListener('click', () => applyFilter(chip.dataset.chipRegion ?? ''));
   });
+
+  // Arriving from the header menu's region links (/?region=...) applies
+  // that filter on load, same as clicking the chip directly.
+  const initialRegion = new URLSearchParams(location.search).get('region');
+  if (initialRegion && [...chips].some((chip) => chip.dataset.chipRegion === initialRegion)) {
+    applyFilter(initialRegion);
+  }
 </script>
