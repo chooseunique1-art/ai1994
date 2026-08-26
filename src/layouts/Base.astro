@@ -799,17 +799,9 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           font-size: 1rem;
         }
 
-        /* Sidebar: sticky as you scroll the lead */
+        /* Sidebar: no height cap — show all articles */
         .sidebar {
-          position: sticky;
-          top: 72px;
-          max-height: calc(100vh - 90px);
-          overflow-y: auto;
-          scrollbar-width: none;
-        }
-
-        .sidebar::-webkit-scrollbar {
-          display: none;
+          /* flows naturally in grid column 2 */
         }
 
         /* Tighter story rows in sidebar */
