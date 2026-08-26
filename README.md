@@ -2,6 +2,8 @@
 
 Automated content pipeline test. Astro static site, deployed on Vercel, written to by n8n.
 
+> ✅ Write access confirmed via Claude Dispatch — 2026-08-27
+
 ## The contract
 
 n8n's only job on the publishing end is: **commit one markdown file to `src/content/blog/`.**
