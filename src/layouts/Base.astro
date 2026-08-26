@@ -510,12 +510,22 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
       .lead-image {
         display: block;
-        width: 100%;
+        width: 100vw;
         height: auto;
         aspect-ratio: 16 / 10;
         object-fit: cover;
         margin-bottom: 0.75rem;
         background: var(--rule);
+        /* Break out to the screen edges regardless of how deeply nested/
+           centered the column around it is (.home caps at 42rem and
+           centers itself at the desktop breakpoint, so a fixed negative
+           margin matching .wrap's padding — like the article header
+           uses — wouldn't reach far enough here). */
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
       }
 
       .eyebrow {
