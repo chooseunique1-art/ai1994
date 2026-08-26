@@ -87,6 +87,13 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         background: var(--paper);
       }
 
+      /* .header-stack sits outside .wrap (a sibling in the body, not a
+         child) specifically so the header needs no viewport-unit
+         breakout trick at all — it's just a normal full-width block by
+         construction. A 100vw-based approach was tried first but
+         floated the header relative to the true viewport rather than
+         .wrap's often-scrollbar-adjusted width, causing a hairline gap
+         on some browsers/OSes. This is the more reliable fix. */
       header.site {
         display: flex;
         align-items: center;
@@ -94,17 +101,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         border-bottom: 1px solid var(--rule);
         padding: 1.1rem 1.1rem;
         margin-bottom: 0.25rem;
-        /* Break out to the true viewport width, not just .wrap's own
-           padding — .wrap sits centered with real margins outside it
-           in the ~480–1024px range (below 480px it's 100% width, above
-           1024px it widens again), so a fixed negative margin matching
-           .wrap's padding only reached .wrap's own edges there, not the
-           screen's. This 100vw technique works regardless of how the
-           containing column is sized at any given width. */
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        margin-left: -50vw;
       }
 
       .brand {
@@ -223,12 +219,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         height: 2px;
         background: var(--rule);
         margin-bottom: 0.25rem;
-        /* Match the header above it edge to edge — same 100vw breakout,
-           see header.site for why the fixed-margin version fell short. */
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        margin-left: -50vw;
+        /* No breakout trick needed — see header.site. */
       }
 
       .progress-fill {
@@ -811,8 +802,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
         /* .wrap's side padding grew to 2rem here — match it so the
            header's content sits at the same inset as the rest of the
-           page. (No change needed for the edge-to-edge breakout itself
-           — the 100vw technique doesn't care how wide .wrap is.) */
+           page. */
         header.site {
           padding-left: 2rem;
           padding-right: 2rem;
@@ -835,8 +825,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <div class="header-stack">
+    <div class="header-stack">
         {
           articleCategory ? (
             <Fragment>
@@ -959,7 +948,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           </header>
         )
       }
-      </div>
+    </div>
+    <div class="wrap">
       <slot />
     </div>
 
