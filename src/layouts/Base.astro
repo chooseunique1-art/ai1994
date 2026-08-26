@@ -128,6 +128,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         margin-bottom: 0;
         background: var(--ink);
         border-bottom-color: transparent;
+        /* Break out of .wrap's side padding so the dark bar reaches the
+           actual screen edges instead of stopping at the content column. */
+        margin-left: -1.1rem;
+        margin-right: -1.1rem;
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
       }
 
       .article-header .back-link,
@@ -201,6 +207,9 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         height: 2px;
         background: var(--rule);
         margin-bottom: 0.25rem;
+        /* Match the header above it edge to edge. */
+        margin-left: -1.1rem;
+        margin-right: -1.1rem;
       }
 
       .progress-fill {
@@ -762,6 +771,20 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         /* More breathing room once the header isn't fighting a narrow viewport. */
         .menu-panel {
           width: 24rem;
+        }
+
+        /* .wrap's side padding grew to 2rem here — match it so the
+           article header + progress rule still reach the screen edges. */
+        .article-header {
+          margin-left: -2rem;
+          margin-right: -2rem;
+          padding-left: 2rem;
+          padding-right: 2rem;
+        }
+
+        .progress-track {
+          margin-left: -2rem;
+          margin-right: -2rem;
         }
 
         /* No sidebar in this layout — cap the reading width on the
