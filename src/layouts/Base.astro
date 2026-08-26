@@ -5,8 +5,7 @@ interface Props {
   title: string;
   description?: string;
   // Set on article pages only. Swaps the homepage's hamburger+search
-  // header for a back-to-home + category header instead, and shows the
-  // reading-progress rule beneath it.
+  // header for a back-to-home + category header instead.
   articleCategory?: string;
 }
 const { title, description = 'Automated content pipeline test.', articleCategory } = Astro.props;
@@ -77,9 +76,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         padding: 0 1.1rem 4rem;
       }
 
-      /* Keeps the header (and, on article pages, the progress rule right
-         beneath it) pinned to the top of the viewport on every page as
-         the reader scrolls. */
+      /* Keeps the header pinned to the top of the viewport on every page
+         as the reader scrolls. */
       .header-stack {
         position: sticky;
         top: 0;
@@ -138,8 +136,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       /* ---------- Article header: back link + inline category ---------- */
 
       /* Trial: dark header, per reference. Only .article-header — the rest
-         of the page (progress rule, article body) stays on the normal
-         light background. */
+         of the page (article body) stays on the normal light background. */
       .article-header {
         gap: 0.7rem;
         margin-bottom: 0;
@@ -213,19 +210,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--muted);
-      }
-
-      .progress-track {
-        height: 2px;
-        background: var(--rule);
-        margin-bottom: 0.25rem;
-        /* No breakout trick needed — see header.site. */
-      }
-
-      .progress-fill {
-        height: 100%;
-        width: 0%;
-        background: var(--accent);
       }
 
       /* ---------- Header icon buttons ---------- */
@@ -828,7 +812,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     <div class="header-stack">
         {
           articleCategory ? (
-            <Fragment>
             <header class="site article-header">
               <a href="/" class="back-link" aria-label="Back to home">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -891,11 +874,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
                 </div>
               </div>
             </header>
-
-            <div class="progress-track" aria-hidden="true">
-              <div class="progress-fill" data-progress-fill />
-            </div>
-          </Fragment>
         ) : (
           <header class="site">
             <div class="menu" data-menu>
@@ -1064,25 +1042,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
             results.hidden = false;
           }
         });
-      }
-
-      // --- Article reading-progress rule ---
-      // A no-op on pages without it (homepage has no [data-progress-fill]).
-      // On an article page with "keep reading" infinite scroll, this
-      // reflects progress through the whole loaded session, not just the
-      // first story — there's no single fixed "end" until the reader
-      // stops scrolling.
-      const progressFill = document.querySelector<HTMLElement>('[data-progress-fill]');
-      if (progressFill) {
-        const updateProgress = () => {
-          const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-          const pct = scrollable > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100)) : 0;
-          progressFill.style.width = `${pct}%`;
-        };
-
-        updateProgress();
-        window.addEventListener('scroll', updateProgress, { passive: true });
-        window.addEventListener('resize', updateProgress);
       }
     </script>
   </body>
