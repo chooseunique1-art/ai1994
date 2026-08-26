@@ -94,6 +94,14 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         border-bottom: 1px solid var(--rule);
         padding: 1.1rem 0;
         margin-bottom: 0.25rem;
+        /* Break out of .wrap's side padding so the header reaches the
+           actual screen edges on every page, not just the content
+           column (overridden again at the 1024px breakpoint, where
+           .wrap's own padding grows from 1.1rem to 2rem). */
+        margin-left: -1.1rem;
+        margin-right: -1.1rem;
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
       }
 
       .brand {
@@ -138,12 +146,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         margin-bottom: 0;
         background: var(--ink);
         border-bottom-color: transparent;
-        /* Break out of .wrap's side padding so the dark bar reaches the
-           actual screen edges instead of stopping at the content column. */
-        margin-left: -1.1rem;
-        margin-right: -1.1rem;
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
+        /* Edge-to-edge breakout is inherited from header.site now. */
       }
 
       .article-header .back-link,
@@ -794,8 +797,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         }
 
         /* .wrap's side padding grew to 2rem here — match it so the
-           article header + progress rule still reach the screen edges. */
-        .article-header {
+           header + progress rule still reach the screen edges. */
+        header.site {
           margin-left: -2rem;
           margin-right: -2rem;
           padding-left: 2rem;
