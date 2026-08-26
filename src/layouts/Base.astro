@@ -120,9 +120,28 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
       /* ---------- Article header: back link + inline category ---------- */
 
+      /* Trial: dark header, per reference. Only .article-header — the rest
+         of the page (progress rule, article body) stays on the normal
+         light background. */
       .article-header {
         gap: 0.7rem;
         margin-bottom: 0;
+        background: var(--ink);
+        border-bottom-color: transparent;
+      }
+
+      .article-header .back-link,
+      .article-header .wordmark-small,
+      .article-header .icon-btn {
+        color: var(--paper);
+      }
+
+      .article-header .article-divider {
+        background: rgba(251, 250, 247, 0.25);
+      }
+
+      .article-header .article-category {
+        color: rgba(251, 250, 247, 0.6);
       }
 
       .back-link {
