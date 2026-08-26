@@ -4,8 +4,12 @@ import { getCollection } from 'astro:content';
 interface Props {
   title: string;
   description?: string;
+  // Set on article pages only. Swaps the homepage's hamburger+search
+  // header for a back-to-home + category header instead, and shows the
+  // reading-progress rule beneath it.
+  articleCategory?: string;
 }
-const { title, description = 'Automated content pipeline test.' } = Astro.props;
+const { title, description = 'Automated content pipeline test.', articleCategory } = Astro.props;
 
 // Site-wide post index. Built once at build time from every published post
 // (not just what any one page happens to render). Two features share it:
@@ -114,6 +118,78 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         white-space: nowrap;
       }
 
+      /* ---------- Article header: back link + inline category ---------- */
+
+      .article-header {
+        gap: 0.7rem;
+        margin-bottom: 0;
+      }
+
+      .back-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        flex: 0 0 auto;
+        color: var(--ink);
+      }
+
+      .back-link svg {
+        width: 1rem;
+        height: 1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .brand-inline {
+        flex: 1 1 auto;
+        min-width: 0;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 0.6rem;
+      }
+
+      .wordmark-small {
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+
+      .article-divider {
+        flex: 0 0 auto;
+        width: 1px;
+        height: 0.8rem;
+        background: var(--rule);
+      }
+
+      .article-category {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .progress-track {
+        height: 2px;
+        background: var(--rule);
+        margin-bottom: 0.25rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--accent);
+      }
+
       /* ---------- Header icon buttons ---------- */
 
       .icon-btn {
@@ -158,6 +234,13 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         border: 1px solid var(--rule);
         box-shadow: 0 8px 24px rgba(22, 22, 26, 0.1);
         padding: 1.1rem;
+      }
+
+      /* Article header puts the hamburger on the right — anchor the panel
+         to that same edge instead of overflowing off-screen. */
+      .article-header .menu-panel {
+        left: auto;
+        right: 0;
       }
 
       .menu-block + .menu-block {
@@ -680,51 +763,124 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
   </head>
   <body>
     <div class="wrap">
-      <header class="site">
-        <div class="menu" data-menu>
-          <button type="button" class="icon-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <line x1="3" y1="7" x2="21" y2="7" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="17" x2="21" y2="17" />
-            </svg>
-          </button>
-
-          <div class="menu-panel" data-menu-panel hidden>
-            <div class="menu-block">
-              <div class="menu-label">Search</div>
-              <div class="search-field">
-                <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="11" cy="11" r="7" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      {
+        articleCategory ? (
+          <Fragment>
+            <header class="site article-header">
+              <a href="/" class="back-link" aria-label="Back to home">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="15 6 9 12 15 18" />
                 </svg>
-                <input
-                  type="search"
-                  class="search-input"
-                  placeholder="Search headlines…"
-                  aria-label="Search headlines"
-                  autocomplete="off"
-                  data-search-input
-                />
+              </a>
+
+              <div class="brand brand-inline">
+                <a href="/" class="wordmark wordmark-small">
+                  The South Press
+                </a>
+                <span class="article-divider" aria-hidden="true" />
+                <span class="article-category">{articleCategory}</span>
               </div>
-              <ul class="search-results" data-search-results hidden></ul>
+
+              <div class="menu" data-menu>
+                <button
+                  type="button"
+                  class="icon-btn"
+                  data-menu-toggle
+                  aria-expanded="false"
+                  aria-label="Open menu"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="3" y1="7" x2="21" y2="7" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="17" x2="21" y2="17" />
+                  </svg>
+                </button>
+
+                <div class="menu-panel" data-menu-panel hidden>
+                  <div class="menu-block">
+                    <div class="menu-label">Search</div>
+                    <div class="search-field">
+                      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      <input
+                        type="search"
+                        class="search-input"
+                        placeholder="Search headlines…"
+                        aria-label="Search headlines"
+                        autocomplete="off"
+                        data-search-input
+                      />
+                    </div>
+                    <ul class="search-results" data-search-results hidden />
+                  </div>
+
+                  <div class="menu-block menu-nav">
+                    <div class="menu-label">Sections</div>
+                    <a href="/">Home</a>
+                    {menuRegions.map((region) => (
+                      <a href={`/?region=${encodeURIComponent(region)}`}>{region}</a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-fill" data-progress-fill />
+            </div>
+          </Fragment>
+        ) : (
+          <header class="site">
+            <div class="menu" data-menu>
+              <button type="button" class="icon-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <line x1="3" y1="7" x2="21" y2="7" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="17" x2="21" y2="17" />
+                </svg>
+              </button>
+
+              <div class="menu-panel" data-menu-panel hidden>
+                <div class="menu-block">
+                  <div class="menu-label">Search</div>
+                  <div class="search-field">
+                    <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="11" cy="11" r="7" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input
+                      type="search"
+                      class="search-input"
+                      placeholder="Search headlines…"
+                      aria-label="Search headlines"
+                      autocomplete="off"
+                      data-search-input
+                    />
+                  </div>
+                  <ul class="search-results" data-search-results hidden />
+                </div>
+
+                <div class="menu-block menu-nav">
+                  <div class="menu-label">Sections</div>
+                  <a href="/">Home</a>
+                  {menuRegions.map((region) => (
+                    <a href={`/?region=${encodeURIComponent(region)}`}>{region}</a>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div class="menu-block menu-nav">
-              <div class="menu-label">Sections</div>
-              <a href="/">Home</a>
-              {menuRegions.map((region) => (
-                <a href={`/?region=${encodeURIComponent(region)}`}>{region}</a>
-              ))}
+            <div class="brand">
+              <a href="/" class="wordmark">
+                The South Press
+              </a>
+              <p class="tagline">perspective that matter</p>
             </div>
-          </div>
-        </div>
-
-        <div class="brand">
-          <a href="/" class="wordmark">Owaya</a>
-          <p class="tagline">perspectives that matter</p>
-        </div>
-      </header>
+          </header>
+        )
+      }
       <slot />
     </div>
 
@@ -839,6 +995,25 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
             results.hidden = false;
           }
         });
+      }
+
+      // --- Article reading-progress rule ---
+      // A no-op on pages without it (homepage has no [data-progress-fill]).
+      // On an article page with "keep reading" infinite scroll, this
+      // reflects progress through the whole loaded session, not just the
+      // first story — there's no single fixed "end" until the reader
+      // stops scrolling.
+      const progressFill = document.querySelector<HTMLElement>('[data-progress-fill]');
+      if (progressFill) {
+        const updateProgress = () => {
+          const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = scrollable > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100)) : 0;
+          progressFill.style.width = `${pct}%`;
+        };
+
+        updateProgress();
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        window.addEventListener('resize', updateProgress);
       }
     </script>
   </body>

@@ -16,7 +16,11 @@ const { Content } = await render(post);
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 ---
 
-<Base title={post.data.title} description={post.data.description}>
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  articleCategory={post.data.region ?? 'Story'}
+>
   <!--
     data-story-feed / data-story / data-sentinel: hooks for the "keep
     reading" infinite scroll below. With JS disabled this renders as a

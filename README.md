@@ -1,4 +1,4 @@
-# Owaya
+# The South Press
 
 Automated content pipeline test. Astro static site, deployed on Vercel, written to by n8n.
 
