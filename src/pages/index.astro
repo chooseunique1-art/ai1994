@@ -14,7 +14,8 @@ const readTime = (body: string | undefined) => {
   return Math.max(1, Math.round(words / 200));
 };
 
-const [top, ...rest] = posts;
+const [top, second, third, ...sidebarRest] = posts;
+const secondaries = [second, third].filter(Boolean);
 
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
@@ -48,24 +49,48 @@ const breakingPost = posts.find((p) => p.data.breaking);
         )}
 
         <div class="content-grid">
-          <a class="lead" href={`/blog/${top.id}/`}>
-            {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
-            <span class="eyebrow">The lead</span>
-            <h2 class="headline">{top.data.title}</h2>
-            <p class="brief">{top.data.description}</p>
-            <div class="meta">
-              {fmt(top.data.pubDate)}
-              {top.data.region && ` | ${top.data.region}`}
-              <span class="dot">·</span>
-              <span class="handle">{top.data.sourceName}</span>
-              <span class="dot">·</span>
-              {readTime(top.body)} min
-            </div>
-          </a>
+          <div class="lead-col">
+            <a class="lead" href={`/blog/${top.id}/`}>
+              {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
+              <span class="eyebrow">The lead</span>
+              <h2 class="headline">{top.data.title}</h2>
+              <p class="brief">{top.data.description}</p>
+              <div class="meta">
+                {fmt(top.data.pubDate)}
+                {top.data.region && ` | ${top.data.region}`}
+                <span class="dot">·</span>
+                <span class="handle">{top.data.sourceName}</span>
+                <span class="dot">·</span>
+                {readTime(top.body)} min
+              </div>
+            </a>
+
+            {secondaries.length > 0 && (
+              <div class="lead-secondaries">
+                {secondaries.map((post) => (
+                  <a class="secondary-story" href={`/blog/${post.id}/`} data-region={post.data.region ?? ''}>
+                    {post.data.image && <img class="secondary-thumb" src={post.data.image} alt="" loading="lazy" />}
+                    <div class="secondary-body">
+                      <h3 class="headline">{post.data.title}</h3>
+                      <p class="brief">{post.data.description}</p>
+                      <div class="meta">
+                        {fmt(post.data.pubDate)}
+                        {post.data.region && ` | ${post.data.region}`}
+                        <span class="dot">·</span>
+                        <span class="handle">{post.data.sourceName}</span>
+                        <span class="dot">·</span>
+                        {readTime(post.body)} min
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div class="sidebar">
             <ol class="ranked-list" data-ranked-list>
-              {rest.map((post) => (
+              {sidebarRest.map((post) => (
                 <li class="ranked-row" data-region={post.data.region ?? ''}>
                   <a class="story-link" href={`/blog/${post.id}/`}>
                     <div class={`story-row ${post.data.image ? '' : 'no-image'}`}>
@@ -112,6 +137,7 @@ const breakingPost = posts.find((p) => p.data.breaking);
 <script>
   const chips = document.querySelectorAll<HTMLButtonElement>('[data-chip-region]');
   const rows = document.querySelectorAll<HTMLLIElement>('[data-ranked-list] > li[data-region]');
+  const secondaryRows = document.querySelectorAll<HTMLAnchorElement>('.secondary-story[data-region]');
   const emptyMsg = document.querySelector<HTMLElement>('[data-ranked-empty]');
 
   function applyFilter(region: string) {
@@ -121,6 +147,11 @@ const breakingPost = posts.find((p) => p.data.breaking);
       const match = region === '' || row.dataset.region === region;
       row.hidden = !match;
       if (match) visibleCount++;
+    });
+
+    secondaryRows.forEach((row) => {
+      const match = region === '' || row.dataset.region === region;
+      (row as HTMLElement).style.display = match ? '' : 'none';
     });
 
     if (emptyMsg) emptyMsg.hidden = visibleCount > 0;
