@@ -256,6 +256,13 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         stroke-linejoin: round;
       }
 
+      /* Menu icon (hamburger + magnifying glass, since it opens both
+         search and section nav) is landscape, not square. */
+      .icon-btn svg.menu-icon {
+        width: 1.5rem;
+        height: 1.05rem;
+      }
+
       /* ---------- Header menu: search + section nav, one panel ---------- */
 
       .menu {
@@ -855,10 +862,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
                   aria-expanded="false"
                   aria-label="Open menu"
                 >
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <line x1="3" y1="7" x2="21" y2="7" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="17" x2="21" y2="17" />
+                  <svg class="menu-icon" viewBox="0 0 34 24" aria-hidden="true">
+                    <line x1="2" y1="5" x2="14" y2="5" />
+                    <line x1="2" y1="12" x2="14" y2="12" />
+                    <line x1="2" y1="19" x2="14" y2="19" />
+                    <circle cx="23" cy="10" r="6" />
+                    <line x1="27.5" y1="14.5" x2="32" y2="19" />
                   </svg>
                 </button>
 
@@ -901,10 +910,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           <header class="site">
             <div class="menu" data-menu>
               <button type="button" class="icon-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <line x1="3" y1="7" x2="21" y2="7" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="17" x2="21" y2="17" />
+                <svg class="menu-icon" viewBox="0 0 34 24" aria-hidden="true">
+                  <line x1="2" y1="5" x2="14" y2="5" />
+                  <line x1="2" y1="12" x2="14" y2="12" />
+                  <line x1="2" y1="19" x2="14" y2="19" />
+                  <circle cx="23" cy="10" r="6" />
+                  <line x1="27.5" y1="14.5" x2="32" y2="19" />
                 </svg>
               </button>
 
