@@ -546,7 +546,9 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         font-size: 1rem;
       }
 
+      /* Hidden on mobile — only shown on desktop */
       .secondary-body .brief {
+        display: none;
         font-family: ui-sans-serif, system-ui, sans-serif;
         font-size: 0.88rem;
         color: #3a3a40;
@@ -850,7 +852,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           font-size: 1rem;
         }
 
-        /* Secondary stories: bigger thumbs on desktop */
+        /* Secondary stories: show brief + bigger thumbs on desktop */
+        .secondary-body .brief {
+          display: block;
+          font-size: 0.92rem;
+        }
+
         .secondary-thumb {
           flex: 0 0 150px;
           width: 150px;
@@ -859,10 +866,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
         .secondary-body .headline {
           font-size: 1.1rem;
-        }
-
-        .secondary-body .brief {
-          font-size: 0.92rem;
         }
 
         /* Sidebar flows naturally */
