@@ -77,6 +77,16 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         padding: 0 1.1rem 4rem;
       }
 
+      /* Keeps the header (and, on article pages, the progress rule right
+         beneath it) pinned to the top of the viewport on every page as
+         the reader scrolls. */
+      .header-stack {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: var(--paper);
+      }
+
       header.site {
         display: flex;
         align-items: center;
@@ -815,9 +825,10 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
   </head>
   <body>
     <div class="wrap">
-      {
-        articleCategory ? (
-          <Fragment>
+      <div class="header-stack">
+        {
+          articleCategory ? (
+            <Fragment>
             <header class="site article-header">
               <a href="/" class="back-link" aria-label="Back to home">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -933,6 +944,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           </header>
         )
       }
+      </div>
       <slot />
     </div>
 
