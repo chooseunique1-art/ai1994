@@ -7,12 +7,8 @@ const posts = (await getCollection('blog', ({ data }) => data.status === 'publis
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// Date only, never relative time — several stories can publish in the same
-// batch, so "3 hours ago" for all of them would be misleading.
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 
-// Rough reading time from the raw markdown body — no new content needed,
-// just a word count off what n8n already wrote.
 const readTime = (body: string | undefined) => {
   const words = (body ?? '').trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
@@ -20,14 +16,10 @@ const readTime = (body: string | undefined) => {
 
 const [top, ...rest] = posts;
 
-// Section chips + the "more sections" grid both read off the same list of
-// distinct regions already present in published posts.
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
 );
 
-// Only renders if a post is genuinely flagged breaking — nothing today is,
-// so this stays dormant until a real story warrants it.
 const breakingPost = posts.find((p) => p.data.breaking);
 ---
 
@@ -55,44 +47,48 @@ const breakingPost = posts.find((p) => p.data.breaking);
           </a>
         )}
 
-        <a class="lead" href={`/blog/${top.id}/`}>
-          {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
-          <span class="eyebrow">The lead</span>
-          <h2 class="headline">{top.data.title}</h2>
-          <p class="brief">{top.data.description}</p>
-          <div class="meta">
-            {fmt(top.data.pubDate)}
-            {top.data.region && ` | ${top.data.region}`}
-            <span class="dot">·</span>
-            <span class="handle">{top.data.sourceName}</span>
-            <span class="dot">·</span>
-            {readTime(top.body)} min
-          </div>
-        </a>
+        <div class="content-grid">
+          <a class="lead" href={`/blog/${top.id}/`}>
+            {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
+            <span class="eyebrow">The lead</span>
+            <h2 class="headline">{top.data.title}</h2>
+            <p class="brief">{top.data.description}</p>
+            <div class="meta">
+              {fmt(top.data.pubDate)}
+              {top.data.region && ` | ${top.data.region}`}
+              <span class="dot">·</span>
+              <span class="handle">{top.data.sourceName}</span>
+              <span class="dot">·</span>
+              {readTime(top.body)} min
+            </div>
+          </a>
 
-        <ol class="ranked-list" data-ranked-list>
-          {rest.map((post) => (
-            <li class="ranked-row" data-region={post.data.region ?? ''}>
-              <a class="story-link" href={`/blog/${post.id}/`}>
-                <div class={`story-row ${post.data.image ? '' : 'no-image'}`}>
-                  {post.data.image && <img class="thumb" src={post.data.image} alt="" loading="lazy" />}
-                  <div class="story-body">
-                    <h3 class="headline">{post.data.title}</h3>
-                    <div class="meta">
-                      {post.data.region ?? 'Top'}
-                      <span class="dot">·</span>
-                      {readTime(post.body)} min
+          <div class="sidebar">
+            <ol class="ranked-list" data-ranked-list>
+              {rest.map((post) => (
+                <li class="ranked-row" data-region={post.data.region ?? ''}>
+                  <a class="story-link" href={`/blog/${post.id}/`}>
+                    <div class={`story-row ${post.data.image ? '' : 'no-image'}`}>
+                      {post.data.image && <img class="thumb" src={post.data.image} alt="" loading="lazy" />}
+                      <div class="story-body">
+                        <h3 class="headline">{post.data.title}</h3>
+                        <div class="meta">
+                          {post.data.region ?? 'Top'}
+                          <span class="dot">·</span>
+                          {readTime(post.body)} min
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </a>
-            </li>
-          ))}
-        </ol>
+                  </a>
+                </li>
+              ))}
+            </ol>
 
-        <p class="ranked-empty" data-ranked-empty hidden>
-          No other stories in this section right now.
-        </p>
+            <p class="ranked-empty" data-ranked-empty hidden>
+              No other stories in this section right now.
+            </p>
+          </div>
+        </div>
 
         {
           regions.length > 0 && (
@@ -114,10 +110,6 @@ const breakingPost = posts.find((p) => p.data.breaking);
 </Base>
 
 <script>
-  // Section chips (top rail + the "more sections" grid echo at the bottom)
-  // filter the ranked list client-side — no page reload, no new backend.
-  // The lead story stays put regardless of filter; it's the day's pick,
-  // not part of any one section.
   const chips = document.querySelectorAll<HTMLButtonElement>('[data-chip-region]');
   const rows = document.querySelectorAll<HTMLLIElement>('[data-ranked-list] > li[data-region]');
   const emptyMsg = document.querySelector<HTMLElement>('[data-ranked-empty]');
@@ -144,8 +136,6 @@ const breakingPost = posts.find((p) => p.data.breaking);
     chip.addEventListener('click', () => applyFilter(chip.dataset.chipRegion ?? ''));
   });
 
-  // Arriving from the header menu's region links (/?region=...) applies
-  // that filter on load, same as clicking the chip directly.
   const initialRegion = new URLSearchParams(location.search).get('region');
   if (initialRegion && [...chips].some((chip) => chip.dataset.chipRegion === initialRegion)) {
     applyFilter(initialRegion);
