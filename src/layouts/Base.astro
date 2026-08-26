@@ -92,16 +92,19 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         align-items: center;
         gap: 0.75rem;
         border-bottom: 1px solid var(--rule);
-        padding: 1.1rem 0;
+        padding: 1.1rem 1.1rem;
         margin-bottom: 0.25rem;
-        /* Break out of .wrap's side padding so the header reaches the
-           actual screen edges on every page, not just the content
-           column (overridden again at the 1024px breakpoint, where
-           .wrap's own padding grows from 1.1rem to 2rem). */
-        margin-left: -1.1rem;
-        margin-right: -1.1rem;
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
+        /* Break out to the true viewport width, not just .wrap's own
+           padding — .wrap sits centered with real margins outside it
+           in the ~480–1024px range (below 480px it's 100% width, above
+           1024px it widens again), so a fixed negative margin matching
+           .wrap's padding only reached .wrap's own edges there, not the
+           screen's. This 100vw technique works regardless of how the
+           containing column is sized at any given width. */
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        margin-left: -50vw;
       }
 
       .brand {
@@ -220,9 +223,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         height: 2px;
         background: var(--rule);
         margin-bottom: 0.25rem;
-        /* Match the header above it edge to edge. */
-        margin-left: -1.1rem;
-        margin-right: -1.1rem;
+        /* Match the header above it edge to edge — same 100vw breakout,
+           see header.site for why the fixed-margin version fell short. */
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        margin-left: -50vw;
       }
 
       .progress-fill {
@@ -804,17 +810,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         }
 
         /* .wrap's side padding grew to 2rem here — match it so the
-           header + progress rule still reach the screen edges. */
+           header's content sits at the same inset as the rest of the
+           page. (No change needed for the edge-to-edge breakout itself
+           — the 100vw technique doesn't care how wide .wrap is.) */
         header.site {
-          margin-left: -2rem;
-          margin-right: -2rem;
           padding-left: 2rem;
           padding-right: 2rem;
-        }
-
-        .progress-track {
-          margin-left: -2rem;
-          margin-right: -2rem;
         }
 
         /* No sidebar in this layout — cap the reading width on the
