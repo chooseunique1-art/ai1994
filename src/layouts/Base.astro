@@ -513,6 +513,51 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         line-height: 1.4;
       }
 
+      /* ---------- Secondary stories (below lead, left column) ---------- */
+
+      .secondary-story {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        text-decoration: none;
+        color: inherit;
+        padding: 1rem 0;
+        border-top: 1px solid var(--rule);
+      }
+
+      .secondary-story:hover .headline {
+        color: var(--accent);
+      }
+
+      .secondary-thumb {
+        flex: 0 0 120px;
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        background: var(--rule);
+      }
+
+      .secondary-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .secondary-body .headline {
+        font-size: 1rem;
+      }
+
+      .secondary-body .brief {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.88rem;
+        color: #3a3a40;
+        margin: 0.3rem 0 0.3rem;
+        line-height: 1.4;
+      }
+
+      .secondary-body .meta {
+        margin-top: 0.25rem;
+      }
+
       /* Ranked list */
       .ranked-list {
         list-style: none;
@@ -758,7 +803,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           flex-wrap: wrap;
         }
 
-        /* BBC-style 2-column grid: big lead left, story list right */
+        /* BBC-style 2-column grid: lead-col left, sidebar right */
         .content-grid {
           display: grid;
           grid-template-columns: 1fr 380px;
@@ -769,12 +814,18 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           margin-top: 0.25rem;
         }
 
-        /* Lead takes full left column */
-        .lead {
-          border-bottom: none;
+        /* Left column wrapper gets the dividing border */
+        .lead-col {
           border-right: 1px solid var(--rule);
           padding-right: 2.5rem;
-          padding-bottom: 0;
+        }
+
+        /* Lead: no border (it's on lead-col now) */
+        .lead {
+          border-bottom: 1px solid var(--rule);
+          border-right: none;
+          padding-right: 0;
+          padding-bottom: 1.1rem;
           margin-bottom: 0;
         }
 
@@ -799,9 +850,24 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
           font-size: 1rem;
         }
 
-        /* Sidebar: no height cap — show all articles */
+        /* Secondary stories: bigger thumbs on desktop */
+        .secondary-thumb {
+          flex: 0 0 150px;
+          width: 150px;
+          height: 100px;
+        }
+
+        .secondary-body .headline {
+          font-size: 1.1rem;
+        }
+
+        .secondary-body .brief {
+          font-size: 0.92rem;
+        }
+
+        /* Sidebar flows naturally */
         .sidebar {
-          /* flows naturally in grid column 2 */
+          /* natural grid column 2 */
         }
 
         /* Tighter story rows in sidebar */
