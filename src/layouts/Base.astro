@@ -490,6 +490,15 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         margin-right: -50vw;
       }
 
+      /* Hero with no image: same left-rule language as sidebar rows,
+         scaled up and in the accent color so it still reads as the
+         lead story rather than a lesser/broken slot. */
+      .lead-no-image {
+        border-left: 3px solid var(--accent);
+        padding-left: 1rem;
+        padding-top: 0.15rem;
+      }
+
       .eyebrow {
         display: block;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
