@@ -51,7 +51,7 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
 
         <div class="content-grid">
           <div class="lead-col">
-            <a class="lead" href={`/blog/${top.id}/`}>
+            <a class={`lead ${top.data.image ? '' : 'lead-no-image'}`} href={`/blog/${top.id}/`}>
               {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
               <span class="eyebrow">{top.data.breaking ? 'Breaking' : 'The lead'}</span>
               <h2 class="headline">{top.data.title}</h2>
