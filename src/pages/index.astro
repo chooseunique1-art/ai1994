@@ -14,14 +14,22 @@ const readTime = (body: string | undefined) => {
   return Math.max(1, Math.round(words / 200));
 };
 
-const [top, second, third, ...sidebarRest] = posts;
+// The hero slot is impact-driven, not purely chronological: a genuinely
+// urgent story (marked `breaking` by the pipeline) takes the lead position
+// even if a less important story published more recently. If nothing is
+// flagged breaking, the most recent post leads as before. Everything below
+// the hero stays in true recency order.
+const breakingPost = posts.find((p) => p.data.breaking);
+const orderedPosts = breakingPost
+  ? [breakingPost, ...posts.filter((p) => p.id !== breakingPost.id)]
+  : posts;
+
+const [top, second, third, ...sidebarRest] = orderedPosts;
 const secondaries = [second, third].filter(Boolean);
 
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
 );
-
-const breakingPost = posts.find((p) => p.data.breaking);
 ---
 
 <Base title="The South Press">
@@ -41,18 +49,11 @@ const breakingPost = posts.find((p) => p.data.breaking);
           ))}
         </nav>
 
-        {breakingPost && (
-          <a class="breaking-banner" href={`/blog/${breakingPost.id}/`}>
-            <span class="breaking-label">Breaking</span>
-            <span class="breaking-headline">{breakingPost.data.title}</span>
-          </a>
-        )}
-
         <div class="content-grid">
           <div class="lead-col">
             <a class="lead" href={`/blog/${top.id}/`}>
               {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
-              <span class="eyebrow">The lead</span>
+              <span class="eyebrow">{top.data.breaking ? 'Breaking' : 'The lead'}</span>
               <h2 class="headline">{top.data.title}</h2>
               <p class="brief">{top.data.description}</p>
               <div class="meta">
