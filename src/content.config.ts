@@ -11,13 +11,22 @@ import { glob } from 'astro/loaders';
  * This is the first quality gate in the pipeline. Do not loosen it.
  */
 
-// Treats an empty string the same as a genuinely absent field. The pipeline
-// sometimes writes "" instead of omitting a key entirely (e.g. a blank
-// spreadsheet cell flows through as ""), and Zod's .optional() only
-// tolerates a *missing* key, not an empty string — without this, the build
-// fails the moment any optional field is blank rather than omitted.
+// Values the pipeline has written as a "nothing here" placeholder at one
+// point or another. Treated identically to a genuinely absent field so the
+// site never displays a placeholder as if it were real data.
+const BLANK_VALUES = new Set(['', 'Confidential source', 'NA', 'N/A']);
+
+// Treats a known placeholder/empty value the same as a genuinely absent
+// field. The pipeline sometimes writes "" or a fallback string like
+// "Confidential source" instead of omitting a key entirely — Zod's
+// .optional() only tolerates a *missing* key, not these placeholder
+// values, so without this the build fails (or the placeholder text
+// renders on the live site) whenever the source data is blank.
 const emptyToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
-  z.preprocess((val) => (val === '' ? undefined : val), schema.optional());
+  z.preprocess(
+    (val) => (typeof val === 'string' && BLANK_VALUES.has(val.trim()) ? undefined : val),
+    schema.optional()
+  );
 
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
