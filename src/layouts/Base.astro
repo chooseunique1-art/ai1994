@@ -697,10 +697,18 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         margin: 1rem -1.1rem;
       }
 
+      /* Capped, cropped consistently regardless of the source photo's
+         native proportions — a tall portrait shot (common from social
+         posts) would otherwise stretch to fill the full-bleed width and
+         end up several screens tall on mobile, burying the article text.
+         object-fit: cover keeps the image intact-looking (center-cropped,
+         no distortion) at a predictable height. */
       .article-image img {
         display: block;
         width: 100%;
-        height: auto;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        background: var(--rule);
       }
 
       .article-image figcaption {
@@ -895,6 +903,13 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
         .story-row .headline {
           font-size: 0.92rem;
+        }
+
+        /* Article body image: cap height on desktop too, don't let it
+           dominate the reading column */
+        .article-image img {
+          aspect-ratio: 16 / 9;
+          max-height: 480px;
         }
       }
     </style>
