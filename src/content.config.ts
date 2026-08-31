@@ -10,6 +10,15 @@ import { glob } from 'astro/loaders';
  *
  * This is the first quality gate in the pipeline. Do not loosen it.
  */
+
+// Treats an empty string the same as a genuinely absent field. The pipeline
+// sometimes writes "" instead of omitting a key entirely (e.g. a blank
+// spreadsheet cell flows through as ""), and Zod's .optional() only
+// tolerates a *missing* key, not an empty string — without this, the build
+// fails the moment any optional field is blank rather than omitted.
+const emptyToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((val) => (val === '' ? undefined : val), schema.optional());
+
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
   schema: z.object({
@@ -24,26 +33,24 @@ const blog = defineCollection({
 
     // Where the facts came from. Optional — some stories are aggregated
     // from a source with no single linkable page.
-    sourceUrl: z.string().url().optional(),
+    sourceUrl: emptyToUndefined(z.string().url()),
 
     // Which outlet, handle, or dataset the source belongs to. Optional —
     // some stories (local tips, no clean attribution) genuinely have none.
-    // Leave the field out entirely rather than writing a placeholder like
-    // "NA" — the template hides source attribution cleanly when it's unset.
-    sourceName: z.string().min(1).optional(),
+    sourceName: emptyToUndefined(z.string().min(1)),
 
     // Geographic tag shown in the meta line, e.g. "Middle East".
-    region: z.string().min(1).optional(),
+    region: emptyToUndefined(z.string().min(1)),
 
     // 'draft' = written but not live. 'published' = appears on the site.
     // n8n should write 'draft' until you trust the pipeline.
     status: z.enum(['draft', 'published']).default('draft'),
 
     // Lead image. Optional — many stories are text-only by design.
-    image: z.string().url().optional(),
+    image: emptyToUndefined(z.string().url()),
 
     // Credit line for the image, e.g. "Reuters".
-    imageCredit: z.string().min(1).optional(),
+    imageCredit: emptyToUndefined(z.string().min(1)),
 
     // Genuinely urgent, developing story — shows the homepage's breaking
     // banner. Leave false/unset for normal coverage; don't set this just
