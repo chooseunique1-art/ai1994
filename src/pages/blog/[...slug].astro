@@ -32,8 +32,12 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
       <h1>{post.data.title}</h1>
       <div class="meta">
         {fmt(post.data.pubDate)}
-        <span class="dot">·</span>
-        <span class="handle">{post.data.sourceName}</span>
+        {post.data.sourceName && (
+          <>
+            <span class="dot">·</span>
+            <span class="handle">{post.data.sourceName}</span>
+          </>
+        )}
       </div>
 
       {
@@ -49,16 +53,20 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
         <Content />
       </div>
 
-      <p class="source-attribution">
-        Source:{' '}
-        {post.data.sourceUrl ? (
-          <a href={post.data.sourceUrl} rel="noopener">
-            {post.data.sourceName}
-          </a>
-        ) : (
-          post.data.sourceName
-        )}
-      </p>
+      {
+        post.data.sourceName && (
+          <p class="source-attribution">
+            Source:{' '}
+            {post.data.sourceUrl ? (
+              <a href={post.data.sourceUrl} rel="noopener">
+                {post.data.sourceName}
+              </a>
+            ) : (
+              post.data.sourceName
+            )}
+          </p>
+        )
+      }
     </article>
 
     <div class="scroll-sentinel" data-sentinel></div>
