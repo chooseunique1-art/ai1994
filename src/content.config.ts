@@ -26,8 +26,11 @@ const blog = defineCollection({
     // from a source with no single linkable page.
     sourceUrl: z.string().url().optional(),
 
-    // Which outlet, handle, or dataset the source belongs to.
-    sourceName: z.string().min(1),
+    // Which outlet, handle, or dataset the source belongs to. Optional —
+    // some stories (local tips, no clean attribution) genuinely have none.
+    // Leave the field out entirely rather than writing a placeholder like
+    // "NA" — the template hides source attribution cleanly when it's unset.
+    sourceName: z.string().min(1).optional(),
 
     // Geographic tag shown in the meta line, e.g. "Middle East".
     region: z.string().min(1).optional(),
