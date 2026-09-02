@@ -35,6 +35,10 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="data:," />
+    <!-- Google Preferred Sources widget (news.google.com/swg). Async and
+         scans the DOM for [google-add-preferred-source-btn] on load — see
+         the prefer-source-bar in the article layout. -->
+    <script async src="https://news.google.com/swg/js/v1/publisher.js"></script>
     <style is:global>
       :root {
         --ink: #16161a;
@@ -783,6 +787,18 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
+      }
+
+      /* ---------- Prefer-source bar (Google Preferred Sources) ---------- */
+
+      .prefer-source-bar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin: 1.5rem 0 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--rule);
       }
 
       article h1 {
