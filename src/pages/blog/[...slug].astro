@@ -56,20 +56,14 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
 
       <!--
         Icon-only share row, all in one line: WhatsApp/X/Facebook/More,
-        then Google's Preferred Sources widget (kept exactly as Google
-        renders it — see the docs comment above). The widget is a
-        domain-level preference, not a per-article action, and ideally
-        would render once per page rather than once per [data-story] —
-        but ended up here anyway because that's the only placement
-        readers actually see (see prior commits' history). Trade-off: on
-        a story pulled in later by the keep-reading feed below, this
-        instance may render as an empty, un-hydrated div if Google's
-        script doesn't rescan dynamically-inserted DOM — cosmetic only
-        (no error), and only affects readers several stories deep into
-        the scroll, not anyone arriving at this URL directly.
+        then a custom Google Preferred Sources trigger (Google's manual/
+        advanced integration — see Base.astro's <script> tag and this
+        page's own <script> below for the init + click wiring). Using the
+        manual trigger instead of Google's auto-rendered button is what
+        keeps this row a fixed set of same-size icons on narrow/mobile
+        widths, rather than wrapping under a wide text pill.
       -->
       <div class="share-bar" aria-label="Share this article, or add The South Press as a preferred source on Google">
-        <span class="share-label">Share</span>
         <a
           class="share-btn share-btn--whatsapp"
           href={whatsappHref}
@@ -118,7 +112,19 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
             <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
           </svg>
         </button>
-        <div google-add-preferred-source-btn data-theme="light"></div>
+        <button
+          type="button"
+          class="share-btn share-btn--google"
+          data-preferred-source-trigger
+          aria-label="Add The South Press as a preferred source on Google"
+        >
+          <svg class="share-icon--google" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z" />
+            <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z" />
+            <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z" />
+            <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z" />
+          </svg>
+        </button>
         <noscript>
           <a class="share-btn share-btn--google-fallback" href={preferredSourceDeeplink}>
             Add as preferred source
@@ -168,6 +174,32 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
   // means fetching its own real page and lifting its [data-story] node out
   // of the response, so injected stories are pixel-identical to visiting
   // that URL directly and pick up any future markup/style changes for free.
+
+  // Google Preferred Sources — manual/advanced integration (see
+  // Base.astro's script tag). Google's script pushes a `preferredSource`
+  // API object through this queue once it's loaded; stash it so the
+  // click delegation below can call it whenever the custom button (in
+  // this article's share row) is actually clicked.
+  type PreferredSourceApi = { addPreferredSource: () => void };
+  let preferredSource: PreferredSourceApi | null = null;
+  (window as any).PREFERRED_SOURCE = (window as any).PREFERRED_SOURCE || [];
+  (window as any).PREFERRED_SOURCE.push(
+    (api: PreferredSourceApi & { init: (opts: { theme: string }) => void }) => {
+      api.init({ theme: 'light' });
+      preferredSource = api;
+    }
+  );
+
+  document.addEventListener('click', (event) => {
+    const trigger = (event.target as HTMLElement).closest('[data-preferred-source-trigger]');
+    if (!trigger) return;
+    if (preferredSource) {
+      preferredSource.addPreferredSource();
+    } else {
+      // Script hasn't finished loading yet — rare, but don't fail silently.
+      console.error('[preferred-source] Google script not ready yet');
+    }
+  });
 
   // "More" share button — opens the device's native share sheet (any
   // installed app, not just the three pinned platforms above). Delegated

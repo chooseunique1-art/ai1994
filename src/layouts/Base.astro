@@ -35,10 +35,13 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="data:," />
-    <!-- Google Preferred Sources widget (news.google.com/swg). Async and
-         scans the DOM for [google-add-preferred-source-btn] on load — see
-         the prefer-source-bar in the article layout. -->
-    <script async src="https://news.google.com/swg/js/v1/publisher.js"></script>
+    <!-- Google Preferred Sources widget (news.google.com/swg), manual/
+         advanced integration: preferred-sources-control="manual" means it
+         won't auto-render its own (wide, text-labeled) button, so the
+         article page can bind a small custom icon button to it instead
+         and keep the whole share row on one line. See the article
+         layout's <script> for the init + trigger wiring. -->
+    <script async preferred-sources-control="manual" src="https://news.google.com/swg/js/v1/publisher.js"></script>
     <style is:global>
       :root {
         --ink: #16161a;
@@ -700,16 +703,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         flex-wrap: wrap;
         gap: 0.5rem;
         margin: 0.85rem 0 1.1rem;
-      }
-
-      .share-label {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.68rem;
-        font-weight: 600;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-right: 0.1rem;
       }
 
       /* Icon-only: WhatsApp/X/Facebook/More/Google all need to sit in one
