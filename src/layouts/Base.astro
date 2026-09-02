@@ -712,18 +712,21 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         margin-right: 0.1rem;
       }
 
+      /* Icon-only: WhatsApp/X/Facebook/More/Google all need to sit in one
+         row without wrapping the page's width, so there's no text label
+         here — aria-label carries the accessible name instead. */
       .share-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.32rem 0.7rem;
+        justify-content: center;
+        width: 2.15rem;
+        height: 2.15rem;
+        padding: 0;
         border: 1px solid var(--rule);
         border-radius: 3px;
         background: transparent;
         color: var(--ink);
         text-decoration: none;
-        font-family: ui-sans-serif, system-ui, sans-serif;
-        font-size: 0.8rem;
         line-height: 1;
       }
 
@@ -734,9 +737,30 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       }
 
       .share-btn svg {
-        width: 1.05rem;
-        height: 1.05rem;
+        width: 1.15rem;
+        height: 1.15rem;
         flex: 0 0 auto;
+      }
+
+      /* Brief confirmation state for the "More" button's clipboard
+         fallback (icon swaps to a checkmark via JS; this just colors
+         the button to match while that's showing). */
+      .share-btn--copied,
+      .share-btn--copied:hover,
+      .share-btn--copied:focus-visible {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* <noscript> text fallback for the Google button — the only
+         .share-btn that still needs to show words, since there's no
+         icon to fall back to without JS. */
+      .share-btn--google-fallback {
+        width: auto;
+        height: auto;
+        padding: 0.32rem 0.7rem;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.8rem;
       }
 
       /* Brand-colored marks — the one deliberate spot of color on an
@@ -776,7 +800,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
          platform, so it stays monoline/ink like the rest of the site's
          UI chrome instead of taking a brand color. */
       .share-btn--native {
-        border: 1px solid var(--rule);
         font: inherit;
         cursor: pointer;
       }
@@ -787,18 +810,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
-      }
-
-      /* ---------- Prefer-source bar (Google Preferred Sources) ---------- */
-      /* Sits directly under .share-bar — same rhythm, no divider of its
-         own, so the two read as one "engage with this article" cluster. */
-
-      .prefer-source-bar {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        margin: 0 0 1.1rem;
       }
 
       article h1 {
