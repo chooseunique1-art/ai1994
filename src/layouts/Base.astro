@@ -697,12 +697,23 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
       /* ---------- Share bar ---------- */
 
+      /* nowrap + horizontal scroll (same treatment as .chip-rail above)
+         rather than flex-wrap — the Google button's full text is long
+         enough that wrapping would push it to its own line on narrow
+         screens; this keeps every button in one row and lets that one
+         button scroll into view instead. */
       .share-bar {
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 0.5rem;
         margin: 0.85rem 0 1.1rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .share-bar::-webkit-scrollbar {
+        display: none;
       }
 
       /* Icon-only: WhatsApp/X/Facebook/More/Google all need to sit in one
@@ -710,6 +721,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
          here — aria-label carries the accessible name instead. */
       .share-btn {
         display: inline-flex;
+        flex: 0 0 auto;
         align-items: center;
         justify-content: center;
         width: 2.15rem;
@@ -720,6 +732,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         background: transparent;
         color: var(--ink);
         text-decoration: none;
+        white-space: nowrap;
         line-height: 1;
       }
 
