@@ -768,6 +768,23 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         color: #1877f2;
       }
 
+      /* Generic "share to anywhere" button — a system action, not a
+         platform, so it stays monoline/ink like the rest of the site's
+         UI chrome instead of taking a brand color. */
+      .share-btn--native {
+        border: 1px solid var(--rule);
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .share-icon--native {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
       article h1 {
         font-size: clamp(1.5rem, 5vw, 1.9rem);
         margin-bottom: 0.6rem;

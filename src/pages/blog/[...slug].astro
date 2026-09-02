@@ -86,6 +86,22 @@ const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURICo
           </svg>
           Facebook
         </a>
+        <button
+          type="button"
+          class="share-btn share-btn--native"
+          data-native-share
+          data-share-title={shareText}
+          data-share-text={post.data.description}
+          data-share-url={canonicalUrl}
+          aria-label="More sharing options"
+        >
+          <svg class="share-icon--native" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v12" />
+            <path d="M7.5 7.5 12 3l4.5 4.5" />
+            <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+          </svg>
+          <span data-native-share-label>More</span>
+        </button>
       </div>
 
       {
@@ -130,6 +146,47 @@ const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURICo
   // means fetching its own real page and lifting its [data-story] node out
   // of the response, so injected stories are pixel-identical to visiting
   // that URL directly and pick up any future markup/style changes for free.
+
+  // "More" share button — opens the device's native share sheet (any
+  // installed app, not just the three pinned platforms above). Delegated
+  // on document rather than bound per-button, so it also covers stories
+  // appended later by the keep-reading feed below.
+  document.addEventListener('click', async (event) => {
+    const trigger = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-native-share]');
+    if (!trigger) return;
+
+    const shareData = {
+      title: trigger.dataset.shareTitle || document.title,
+      text: trigger.dataset.shareText || '',
+      url: trigger.dataset.shareUrl || location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // AbortError just means the reader closed the native sheet — not a failure.
+        if ((err as Error).name !== 'AbortError') console.error('[share] native share failed', err);
+      }
+      return;
+    }
+
+    // No Web Share API (most desktop browsers): copy the link instead,
+    // with a brief label swap to confirm it happened.
+    const label = trigger.querySelector<HTMLElement>('[data-native-share-label]');
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      if (label) {
+        const original = label.textContent;
+        label.textContent = 'Copied!';
+        setTimeout(() => {
+          label.textContent = original;
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('[share] clipboard copy failed', err);
+    }
+  });
 
   const feed = document.querySelector<HTMLElement>('[data-story-feed]');
   const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
