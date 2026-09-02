@@ -730,14 +730,42 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       }
 
       .share-btn svg {
-        width: 0.85rem;
-        height: 0.85rem;
+        width: 1.05rem;
+        height: 1.05rem;
         flex: 0 0 auto;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+      }
+
+      /* Brand-colored marks — the one deliberate spot of color on an
+         otherwise monochrome page, so the row reads at a glance instead
+         of blending into the meta text around it. */
+      .share-icon--whatsapp {
+        fill: #25d366;
+      }
+
+      .share-icon--x {
+        fill: #0a0a0a;
+      }
+
+      .share-icon--facebook {
+        fill: #1877f2;
+      }
+
+      .share-btn--whatsapp:hover,
+      .share-btn--whatsapp:focus-visible {
+        border-color: #25d366;
+        color: #25d366;
+      }
+
+      .share-btn--x:hover,
+      .share-btn--x:focus-visible {
+        border-color: #0a0a0a;
+        color: #0a0a0a;
+      }
+
+      .share-btn--facebook:hover,
+      .share-btn--facebook:focus-visible {
+        border-color: #1877f2;
+        color: #1877f2;
       }
 
       article h1 {
