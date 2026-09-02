@@ -22,6 +22,12 @@ const shareText = post.data.title;
 const whatsappHref = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${canonicalUrl}`)}`;
 const xHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(canonicalUrl)}`;
 const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`;
+
+// No-JS fallback for the Google Preferred Sources widget below — same
+// origin as the share links above, so it tracks whatever `site` is set
+// to in astro.config.mjs.
+const siteHost = new URL(canonicalUrl).host;
+const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${encodeURIComponent(siteHost)}`;
 ---
 
 <Base
@@ -132,6 +138,22 @@ const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURICo
         )
       }
     </article>
+
+    <!--
+      Google Preferred Sources widget. Deliberately rendered here, once,
+      outside the [data-story] article above — that article node is the
+      exact thing the keep-reading script below lifts out of other pages'
+      responses and clones into the feed. This is a domain-level
+      preference (not a per-article action), so it belongs on the page
+      once regardless of how many stories the reader scrolls through.
+    -->
+    <div class="prefer-source-bar" aria-label="Add The South Press as a preferred source on Google">
+      <span class="share-label">Prefer us on Google</span>
+      <div google-add-preferred-source-btn data-theme="light"></div>
+      <noscript>
+        <a class="share-btn" href={preferredSourceDeeplink}>Add as preferred source</a>
+      </noscript>
+    </div>
 
     <div class="scroll-sentinel" data-sentinel></div>
   </div>
