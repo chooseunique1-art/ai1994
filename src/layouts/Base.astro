@@ -745,15 +745,27 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         color: var(--accent);
       }
 
-      /* <noscript> text fallback for the Google button — the only
-         .share-btn that still needs to show words, since there's no
-         icon to fall back to without JS. */
+      /* The Google button is the one exception to icon-only: it keeps a
+         short text label so a bare "G" doesn't read as ambiguous
+         (Search? Gmail? sign-in?). Auto width instead of the fixed
+         square the other four use; height stays the same for row
+         alignment. Its <noscript> fallback shares the same sizing. */
+      .share-btn--google,
       .share-btn--google-fallback {
         width: auto;
-        height: auto;
-        padding: 0.32rem 0.7rem;
+        gap: 0.4rem;
+        padding: 0 0.7rem;
         font-family: ui-sans-serif, system-ui, sans-serif;
         font-size: 0.8rem;
+      }
+
+      .share-btn--google {
+        cursor: pointer;
+      }
+
+      .share-btn--google-fallback {
+        height: auto;
+        padding: 0.32rem 0.7rem;
       }
 
       /* Brand-colored marks — the one deliberate spot of color on an
