@@ -110,6 +110,26 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
         </button>
       </div>
 
+      <!--
+        Google Preferred Sources widget. This is a domain-level preference,
+        not a per-article action, and ideally would render once per page
+        rather than once per [data-story] — but that placement (see prior
+        commit) buried it below the full article, where readers never
+        scrolled far enough to see it. Visibility wins: it lives here now.
+        Trade-off: on a story pulled in later by the keep-reading feed
+        below, this instance may render as an empty, un-hydrated div if
+        Google's script doesn't rescan dynamically-inserted DOM — cosmetic
+        only (no error), and only affects readers several stories deep
+        into the scroll, not anyone arriving at this URL directly.
+      -->
+      <div class="prefer-source-bar" aria-label="Add The South Press as a preferred source on Google">
+        <span class="share-label">Prefer us on Google</span>
+        <div google-add-preferred-source-btn data-theme="light"></div>
+        <noscript>
+          <a class="share-btn" href={preferredSourceDeeplink}>Add as preferred source</a>
+        </noscript>
+      </div>
+
       {
         post.data.image && (
           <figure class="article-image">
@@ -138,22 +158,6 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
         )
       }
     </article>
-
-    <!--
-      Google Preferred Sources widget. Deliberately rendered here, once,
-      outside the [data-story] article above — that article node is the
-      exact thing the keep-reading script below lifts out of other pages'
-      responses and clones into the feed. This is a domain-level
-      preference (not a per-article action), so it belongs on the page
-      once regardless of how many stories the reader scrolls through.
-    -->
-    <div class="prefer-source-bar" aria-label="Add The South Press as a preferred source on Google">
-      <span class="share-label">Prefer us on Google</span>
-      <div google-add-preferred-source-btn data-theme="light"></div>
-      <noscript>
-        <a class="share-btn" href={preferredSourceDeeplink}>Add as preferred source</a>
-      </noscript>
-    </div>
 
     <div class="scroll-sentinel" data-sentinel></div>
   </div>

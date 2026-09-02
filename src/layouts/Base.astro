@@ -790,15 +790,15 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       }
 
       /* ---------- Prefer-source bar (Google Preferred Sources) ---------- */
+      /* Sits directly under .share-bar — same rhythm, no divider of its
+         own, so the two read as one "engage with this article" cluster. */
 
       .prefer-source-bar {
         display: flex;
         align-items: center;
         flex-wrap: wrap;
         gap: 0.6rem;
-        margin: 1.5rem 0 0;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--rule);
+        margin: 0 0 1.1rem;
       }
 
       article h1 {
