@@ -46,13 +46,28 @@ const hasMoreStories = sidebarRest.length > SIDEBAR_LIMIT;
 
 // "Trending" strip — a random sample re-rolled on every build, not a real
 // engagement metric (no click data exists yet), so it's labeled "Trending"
-// rather than "Most Read". Pool is capped to the most recent stories only
-// (not the full archive) so a story from days ago can't surface here next
-// to genuinely current ones — recency is a rough proxy for "still live"
-// until real click tracking exists.
+// rather than "Most Read". Two-tier pool rather than pure recency: a
+// genuinely major story (pipeline-flagged breaking) stays eligible for a
+// few days even as it ages past the "most recent" window, so an ongoing
+// story doesn't vanish from Trending just because the clock moved on. The
+// remainder of the pool is filled with the most recent non-breaking posts
+// so the strip still skews current day-to-day.
 const TRENDING_COUNT = 6;
-const TRENDING_POOL = 30;
-const trending = [...posts.slice(0, TRENDING_POOL)].sort(() => Math.random() - 0.5).slice(0, TRENDING_COUNT);
+const RECENT_POOL = 30;
+const BREAKING_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
+const now = Date.now();
+
+const recentBreaking = posts.filter(
+  (p) => p.data.breaking && now - p.data.pubDate.valueOf() <= BREAKING_WINDOW_MS
+);
+const recentPosts = posts.slice(0, RECENT_POOL);
+
+const trendingPoolMap = new Map(
+  [...recentBreaking, ...recentPosts].map((p) => [p.id, p])
+);
+const trendingPool = [...trendingPoolMap.values()];
+
+const trending = [...trendingPool].sort(() => Math.random() - 0.5).slice(0, TRENDING_COUNT);
 
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
