@@ -690,6 +690,41 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         border-top: 1px solid var(--rule);
       }
 
+      /* Link at the bottom of the capped homepage sidebar to the full
+         archive — same visual language as .ranked-empty (a quiet,
+         top-bordered footer row) but a real link, not a status message. */
+      .more-stories-link {
+        display: block;
+        text-align: center;
+        padding: 1rem 0 0.25rem;
+        margin-top: 0.5rem;
+        border-top: 1px solid var(--rule);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .more-stories-link:hover,
+      .more-stories-link:focus-visible {
+        text-decoration: underline;
+      }
+
+      /* ---------- Archive page ---------- */
+
+      .archive-wrap {
+        max-width: 42rem;
+        margin: 0 auto;
+      }
+
+      .archive-title {
+        font-size: clamp(1.4rem, 4vw, 1.7rem);
+        margin-bottom: 1.25rem;
+      }
+
       .sections-grid {
         margin-top: 1.5rem;
         padding-top: 1.1rem;
