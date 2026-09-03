@@ -4,7 +4,7 @@ description: "Pakistan's government said six to seven Muslim-majority countries 
 pubDate: 2026-08-31T21:18:58.934Z
 status: "published"
 region: "World"
-image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Mohammad_Ishaq_Dar_in_2024_%28cropped%29.jpg"
+image: "https://www.app.com.pk/wp-content/uploads/2024/05/APP70-220524Islamabad.jpg"
 breaking: true
 ---
 
