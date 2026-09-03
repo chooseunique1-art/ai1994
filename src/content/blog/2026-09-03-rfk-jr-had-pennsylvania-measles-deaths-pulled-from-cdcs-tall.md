@@ -4,7 +4,7 @@ description: "U.S. Health and Human Services Secretary Robert F. Kennedy Jr. dir
 pubDate: 2026-09-03T13:20:05.287Z
 status: "published"
 region: "US"
-image: "https://upload.wikimedia.org/wikipedia/commons/0/08/Robert_F._Kennedy_Jr.%2C_official_portrait_%282025%29.jpg"
+image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/The_Secretary_Kennedy_Podcast.jpg/1280px-The_Secretary_Kennedy_Podcast.jpg"
 breaking: true
 ---
 
