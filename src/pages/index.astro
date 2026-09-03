@@ -27,6 +27,13 @@ const orderedPosts = breakingPost
 const [top, second, third, ...sidebarRest] = orderedPosts;
 const secondaries = [second, third].filter(Boolean);
 
+// Fills the gap on desktop where the sidebar list runs longer than the
+// lead column (handoff doc §5.3/7 — previously undecided). Text-only,
+// no images, reusing the same pool as the sidebar rather than any new
+// data or pipeline change. Hidden on mobile via CSS since it would just
+// duplicate the sidebar there.
+const briefItems = sidebarRest.slice(0, 6);
+
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
 );
@@ -85,6 +92,19 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
                     </div>
                   </a>
                 ))}
+              </div>
+            )}
+
+            {briefItems.length > 0 && (
+              <div class="in-brief">
+                <div class="in-brief-label">In Brief</div>
+                <ul class="in-brief-list">
+                  {briefItems.map((post) => (
+                    <li>
+                      <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
