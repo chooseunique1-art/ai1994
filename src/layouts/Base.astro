@@ -576,6 +576,54 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         margin-top: 0.25rem;
       }
 
+      /* ---------- In Brief (fills the desktop lead-column gap, §5.3/7) ---------- */
+
+      /* Hidden by default — the gap it fills only exists in the desktop
+         2-column grid; on mobile these same stories already appear in
+         the single sidebar list below, so showing this too would just
+         be a duplicate. */
+      .in-brief {
+        display: none;
+      }
+
+      .in-brief-label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .in-brief-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .in-brief-list li {
+        border-top: 1px solid var(--rule);
+      }
+
+      .in-brief-list li:first-child {
+        border-top: none;
+      }
+
+      .in-brief-list a {
+        display: block;
+        padding: 0.55rem 0;
+        text-decoration: none;
+        color: var(--ink);
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-size: 0.92rem;
+        line-height: 1.35;
+      }
+
+      .in-brief-list a:hover {
+        color: var(--accent);
+      }
+
       /* Ranked list */
       .ranked-list {
         list-style: none;
@@ -1025,6 +1073,15 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
 
         .secondary-body .headline {
           font-size: 1.1rem;
+        }
+
+        /* In Brief only exists to fill the desktop-only gap below the
+           lead column — switched on here, not before. */
+        .in-brief {
+          display: block;
+          margin-top: 1.25rem;
+          padding-top: 1.1rem;
+          border-top: 1px solid var(--rule);
         }
 
         /* Sidebar flows naturally */
