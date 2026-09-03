@@ -34,6 +34,16 @@ const secondaries = [second, third].filter(Boolean);
 // duplicate the sidebar there.
 const briefItems = sidebarRest.slice(0, 6);
 
+// Sidebar is capped rather than showing every published post ever —
+// with hundreds of posts accumulating over time, an uncapped list was
+// both the actual source of the persistent layout gap (a much shorter
+// lead column paired against an ever-growing sidebar) and a genuinely
+// long single-page list in its own right. Anything beyond the cap is
+// still reachable via the archive page.
+const SIDEBAR_LIMIT = 15;
+const sidebarShown = sidebarRest.slice(0, SIDEBAR_LIMIT);
+const hasMoreStories = sidebarRest.length > SIDEBAR_LIMIT;
+
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
 );
@@ -111,7 +121,7 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
 
           <div class="sidebar">
             <ol class="ranked-list" data-ranked-list>
-              {sidebarRest.map((post) => (
+              {sidebarShown.map((post) => (
                 <li class="ranked-row" data-region={post.data.region ?? ''}>
                   <a class="story-link" href={`/blog/${post.id}/`}>
                     <div class={`story-row ${post.data.image ? '' : 'no-image'}`}>
@@ -133,6 +143,12 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
             <p class="ranked-empty" data-ranked-empty hidden>
               No other stories in this section right now.
             </p>
+
+            {hasMoreStories && (
+              <a class="more-stories-link" href="/archive/">
+                More stories →
+              </a>
+            )}
           </div>
         </div>
 
