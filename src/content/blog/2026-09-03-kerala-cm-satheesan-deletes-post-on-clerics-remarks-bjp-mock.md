@@ -4,7 +4,7 @@ description: "Kerala Chief Minister V.D. Satheesan briefly waded deeper into the
 pubDate: 2026-09-03T09:30:05.606Z
 status: "published"
 region: "India"
-image: "https://upload.wikimedia.org/wikipedia/commons/6/65/VD_Satheesan.jpg"
+image: "https://img.onmanorama.com/content/dam/mm/en/archive/kerala/top-news/images/2026/5/18/oath-satheesan1.jpg"
 breaking: false
 ---
 
