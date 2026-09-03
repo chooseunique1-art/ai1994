@@ -766,6 +766,59 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         color: var(--accent);
       }
 
+      /* ---------- Trending strip ---------- */
+
+      /* Random 6, re-rolled at build time (no real click data exists
+         yet, so this is deliberately not labeled "Most Read") — gives
+         the bottom of the homepage the bit of visual variety the rest
+         of the page (chronological/impact-ordered) doesn't have. */
+      .trending-grid {
+        margin-top: 1.5rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--rule);
+      }
+
+      .trending-label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.75rem;
+      }
+
+      .trending-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .trending-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .trending-card:hover .headline {
+        color: var(--accent);
+      }
+
+      .trending-thumb {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        object-position: 50% 25%;
+        background: var(--rule);
+        margin-bottom: 0.5rem;
+      }
+
+      .trending-card .headline {
+        font-size: 0.92rem;
+        line-height: 1.3;
+      }
+
       /* ---------- Article page ---------- */
 
       .article-region {
@@ -1152,6 +1205,10 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         .article-image img {
           aspect-ratio: 16 / 9;
           max-height: 480px;
+        }
+
+        .trending-items {
+          grid-template-columns: repeat(6, 1fr);
         }
       }
     </style>
