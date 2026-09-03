@@ -4,7 +4,7 @@ description: "Jailed Kashmiri separatist leader Yasin Malik has told a Srinagar 
 pubDate: 2026-09-03T05:30:05.353Z
 status: "published"
 region: "India"
-image: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Yasin_Malik.jpg"
+image: "https://www.aljazeera.com/wp-content/uploads/2022/05/2022-05-25T090213Z_2025175200_RC29EU95BFM0_RTRMADP_3_INDIA-KASHMIR-COURT.jpg?resize=1920%2C1440"
 breaking: false
 ---
 
