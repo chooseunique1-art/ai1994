@@ -4,7 +4,7 @@ description: "President Donald Trump has stopped short of ruling out authorizing
 pubDate: 2026-09-03T09:05:09.797Z
 status: "published"
 region: "Middle East"
-image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Official_Presidential_Portrait_of_President_Donald_J._Trump_%282025%29.jpg"
+image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/President_Donald_Trump_updates_members_of_the_media_on_the_rescue_of_missing_U.S._airmen_in_Iran_(P20260406DT-3242).jpg/1280px-President_Donald_Trump_updates_members_of_the_media_on_the_rescue_of_missing_U.S._airmen_in_Iran_(P20260406DT-3242).jpg"
 breaking: true
 ---
 
