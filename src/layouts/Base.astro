@@ -488,6 +488,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         height: auto;
         aspect-ratio: 16 / 10;
         object-fit: cover;
+        object-position: top;
         margin-bottom: 0.75rem;
         background: var(--rule);
         position: relative;
@@ -550,6 +551,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         width: 120px;
         height: 80px;
         object-fit: cover;
+        object-position: top;
         background: var(--rule);
       }
 
@@ -661,6 +663,7 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         width: 128px;
         height: 96px;
         object-fit: cover;
+        object-position: top;
         background: var(--rule);
       }
 
@@ -927,12 +930,17 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
          posts) would otherwise stretch to fill the full-bleed width and
          end up several screens tall on mobile, burying the article text.
          object-fit: cover keeps the image intact-looking (center-cropped,
-         no distortion) at a predictable height. */
+         no distortion) at a predictable height. object-position: top
+         biases the crop toward the top of the frame rather than dead
+         center, since these are overwhelmingly headshots/portraits where
+         the face sits in the upper portion — a center crop was cutting
+         off faces on tall source photos. */
       .article-image img {
         display: block;
         width: 100%;
         aspect-ratio: 16 / 10;
         object-fit: cover;
+        object-position: top;
         background: var(--rule);
       }
 
