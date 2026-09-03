@@ -44,15 +44,15 @@ const SIDEBAR_LIMIT = 15;
 const sidebarShown = sidebarRest.slice(0, SIDEBAR_LIMIT);
 const hasMoreStories = sidebarRest.length > SIDEBAR_LIMIT;
 
-// "Trending" strip at the bottom of the page — the bit of visual variety
-// every other section of the homepage (chronological/impact-ordered)
-// deliberately doesn't have. This is a random sample of published posts
-// re-rolled on every build, not a real engagement metric (no click data
-// exists yet), so it's labeled "Trending" rather than "Most Read" to
-// avoid implying numbers that don't exist. Since the pipeline rebuilds
-// roughly hourly, the set changes on its own without any client JS.
+// "Trending" strip — a random sample re-rolled on every build, not a real
+// engagement metric (no click data exists yet), so it's labeled "Trending"
+// rather than "Most Read". Pool is capped to the most recent stories only
+// (not the full archive) so a story from days ago can't surface here next
+// to genuinely current ones — recency is a rough proxy for "still live"
+// until real click tracking exists.
 const TRENDING_COUNT = 6;
-const trending = [...posts].sort(() => Math.random() - 0.5).slice(0, TRENDING_COUNT);
+const TRENDING_POOL = 30;
+const trending = [...posts.slice(0, TRENDING_POOL)].sort(() => Math.random() - 0.5).slice(0, TRENDING_COUNT);
 
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
@@ -163,21 +163,6 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
         </div>
 
         {
-          regions.length > 0 && (
-            <div class="sections-grid">
-              <div class="sections-label">More sections</div>
-              <div class="sections-items">
-                {regions.map((region) => (
-                  <button type="button" class="section-link" data-chip-region={region}>
-                    {region}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )
-        }
-
-        {
           trending.length > 0 && (
             <div class="trending-grid">
               <div class="trending-label">Trending</div>
@@ -187,6 +172,21 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
                     {post.data.image && <img class="trending-thumb" src={post.data.image} alt="" loading="lazy" />}
                     <h3 class="headline">{post.data.title}</h3>
                   </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        {
+          regions.length > 0 && (
+            <div class="sections-grid">
+              <div class="sections-label">More sections</div>
+              <div class="sections-items">
+                {regions.map((region) => (
+                  <button type="button" class="section-link" data-chip-region={region}>
+                    {region}
+                  </button>
                 ))}
               </div>
             </div>
