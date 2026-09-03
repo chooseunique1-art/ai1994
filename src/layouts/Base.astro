@@ -43,7 +43,9 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="data:," />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <!-- Google Preferred Sources widget (news.google.com/swg), manual/
          advanced integration: preferred-sources-control="manual" means it
          won't auto-render its own (wide, text-labeled) button, so the
