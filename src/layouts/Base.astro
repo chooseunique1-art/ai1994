@@ -127,13 +127,33 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         white-space: nowrap;
       }
 
-      /* Live IST clock, homepage header only — client-set (not
-         server-rendered) since the page is statically built and would
-         otherwise show a stale build-time timestamp. Hidden on mobile
-         where header width is already tight with the brand + menu. */
+      /* Homepage header, right side: weather badge (always visible,
+         mobile included) + live IST clock (desktop/tablet only — the
+         combined width doesn't fit next to the brand on small screens). */
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-left: auto;
+      }
+
+      .header-weather {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.78rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .header-weather-icon {
+        font-size: 1.15rem;
+        line-height: 1;
+      }
+
       .header-datetime {
         display: none;
-        margin-left: auto;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.72rem;
         color: var(--muted);
@@ -143,6 +163,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       @media (min-width: 640px) {
         .header-datetime {
           display: block;
+          padding-left: 0.6rem;
+          border-left: 1px solid var(--rule);
         }
       }
 
@@ -1359,7 +1381,10 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
               <p class="tagline">perspective that matters</p>
             </div>
 
-            <div class="header-datetime" data-header-datetime aria-live="off"></div>
+            <div class="header-right">
+              <div class="header-weather" data-header-weather aria-live="off"></div>
+              <div class="header-datetime" data-header-datetime aria-live="off"></div>
+            </div>
           </header>
         )
       }
@@ -1387,6 +1412,43 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         };
         update();
         setInterval(update, 30000);
+      }
+
+      const headerWeather = document.querySelector<HTMLElement>('[data-header-weather]');
+      if (headerWeather) {
+        // WMO weather codes (Open-Meteo's `weather_code`) mapped to a
+        // colorful emoji — no icon asset/font needed, renders natively
+        // on every platform.
+        const weatherIcon = (code: number): string => {
+          if (code === 0) return '☀️';
+          if (code <= 2) return '🌤️';
+          if (code === 3) return '☁️';
+          if (code === 45 || code === 48) return '🌫️';
+          if (code >= 51 && code <= 57) return '🌦️';
+          if (code >= 61 && code <= 67) return '🌧️';
+          if (code >= 71 && code <= 77) return '❄️';
+          if (code >= 80 && code <= 82) return '🌧️';
+          if (code >= 85 && code <= 86) return '🌨️';
+          if (code >= 95) return '⛈️';
+          return '🌡️';
+        };
+
+        // Delhi — fixed location for this badge. Open-Meteo needs no API
+        // key and has no request limit for this kind of light, occasional
+        // client-side call.
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m,weather_code&timezone=Asia%2FKolkata')
+          .then((res) => res.json())
+          .then((data) => {
+            const temp = Math.round(data?.current?.temperature_2m);
+            const code = data?.current?.weather_code;
+            if (Number.isFinite(temp)) {
+              headerWeather.innerHTML = `<span class="header-weather-icon">${weatherIcon(code)}</span>Delhi ${temp}°C`;
+            }
+          })
+          .catch(() => {
+            // Fails silently — a missing weather badge shouldn't be
+            // visible as an error state on a news homepage.
+          });
       }
 
       const menu = document.querySelector<HTMLElement>('[data-menu]');
