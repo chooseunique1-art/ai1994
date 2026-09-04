@@ -127,6 +127,25 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         white-space: nowrap;
       }
 
+      /* Live IST clock, homepage header only — client-set (not
+         server-rendered) since the page is statically built and would
+         otherwise show a stale build-time timestamp. Hidden on mobile
+         where header width is already tight with the brand + menu. */
+      .header-datetime {
+        display: none;
+        margin-left: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.72rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      @media (min-width: 640px) {
+        .header-datetime {
+          display: block;
+        }
+      }
+
       /* ---------- Article header ---------- */
 
       .article-header {
@@ -1339,6 +1358,8 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
               </a>
               <p class="tagline">perspective that matters</p>
             </div>
+
+            <div class="header-datetime" data-header-datetime aria-live="off"></div>
           </header>
         )
       }
@@ -1350,6 +1371,24 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
     <script type="application/json" data-search-index set:html={searchIndexJson} />
 
     <script>
+      const headerDatetime = document.querySelector<HTMLElement>('[data-header-datetime]');
+      if (headerDatetime) {
+        const fmt = new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Kolkata',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        });
+        const update = () => {
+          headerDatetime.textContent = `${fmt.format(new Date())} IST`;
+        };
+        update();
+        setInterval(update, 30000);
+      }
+
       const menu = document.querySelector<HTMLElement>('[data-menu]');
       const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
       const menuPanel = document.querySelector<HTMLElement>('[data-menu-panel]');
