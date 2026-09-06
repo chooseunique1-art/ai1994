@@ -69,6 +69,31 @@ const trendingPool = [...trendingPoolMap.values()];
 
 const trending = [...trendingPool].sort(() => Math.random() - 0.5).slice(0, TRENDING_COUNT);
 
+// The pipeline runs hourly but doesn't always publish something new, and
+// since this is a static build (only rebuilds on a new commit), the hero
+// would otherwise just sit frozen whenever nothing new came in. Rotating
+// it client-side, once per hour, among recent image-bearing stories means
+// the homepage still feels alive between rebuilds. A genuine breaking
+// story stays pinned — rotation is skipped entirely in that case.
+const HERO_ROTATION_COUNT = 8;
+const heroIsBreaking = Boolean(top.data.breaking);
+const heroCandidates = heroIsBreaking
+  ? []
+  : orderedPosts
+      .filter((p) => p.data.image)
+      .slice(0, HERO_ROTATION_COUNT)
+      .map((p) => ({
+        id: p.id,
+        title: p.data.title,
+        description: p.data.description,
+        image: p.data.image,
+        region: p.data.region ?? null,
+        sourceName: p.data.sourceName ?? null,
+        date: fmt(p.data.pubDate),
+        readTime: readTime(p.body),
+      }));
+const heroCandidatesJson = JSON.stringify(heroCandidates).replace(/</g, '\\u003c');
+
 const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is string => Boolean(r)))].sort(
   (a, b) => a.localeCompare(b)
 );
@@ -93,12 +118,19 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
 
         <div class="content-grid">
           <div class="lead-col">
-            <a class={`lead ${top.data.image ? '' : 'lead-no-image'}`} href={`/blog/${top.id}/`}>
-              {top.data.image && <img class="lead-image" src={top.data.image} alt="" loading="eager" />}
-              <span class="eyebrow">{top.data.breaking ? 'Breaking' : 'The lead'}</span>
-              <h2 class="headline">{top.data.title}</h2>
-              <p class="brief">{top.data.description}</p>
-              <div class="meta">
+            <a
+              class={`lead ${top.data.image ? '' : 'lead-no-image'}`}
+              href={`/blog/${top.id}/`}
+              data-hero-link
+              data-hero-static={heroIsBreaking ? 'true' : 'false'}
+            >
+              {top.data.image && (
+                <img class="lead-image" src={top.data.image} alt="" loading="eager" data-hero-image />
+              )}
+              <span class="eyebrow" data-hero-eyebrow>{top.data.breaking ? 'Breaking' : 'The lead'}</span>
+              <h2 class="headline" data-hero-headline>{top.data.title}</h2>
+              <p class="brief" data-hero-brief>{top.data.description}</p>
+              <div class="meta" data-hero-meta>
                 {fmt(top.data.pubDate)}
                 {top.data.region && ` | ${top.data.region}`}
                 <span class="dot">·</span>
@@ -210,6 +242,8 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
       </div>
     )
   }
+
+  <script type="application/json" data-hero-candidates set:html={heroCandidatesJson} />
 </Base>
 
 <script>
@@ -248,5 +282,63 @@ const regions = [...new Set(posts.map((p) => p.data.region).filter((r): r is str
   const initialRegion = new URLSearchParams(location.search).get('region');
   if (initialRegion && [...chips].some((chip) => chip.dataset.chipRegion === initialRegion)) {
     applyFilter(initialRegion);
+  }
+
+  const heroLink = document.querySelector<HTMLAnchorElement>('[data-hero-link]');
+  const heroCandidatesTag = document.querySelector<HTMLScriptElement>('[data-hero-candidates]');
+
+  if (heroLink && heroCandidatesTag && heroLink.dataset.heroStatic !== 'true') {
+    type HeroCandidate = {
+      id: string;
+      title: string;
+      description: string;
+      image: string;
+      region: string | null;
+      sourceName: string | null;
+      date: string;
+      readTime: number;
+    };
+
+    const candidates: HeroCandidate[] = JSON.parse(heroCandidatesTag.textContent || '[]');
+
+    if (candidates.length > 1) {
+      const hourSeed = Math.floor(Date.now() / (60 * 60 * 1000));
+      const pick = candidates[hourSeed % candidates.length];
+
+      const img = heroLink.querySelector<HTMLImageElement>('[data-hero-image]');
+      const eyebrow = heroLink.querySelector<HTMLElement>('[data-hero-eyebrow]');
+      const headline = heroLink.querySelector<HTMLElement>('[data-hero-headline]');
+      const brief = heroLink.querySelector<HTMLElement>('[data-hero-brief]');
+      const meta = heroLink.querySelector<HTMLElement>('[data-hero-meta]');
+
+      if (img) img.src = pick.image;
+      if (eyebrow) eyebrow.textContent = 'The lead';
+      if (headline) headline.textContent = pick.title;
+      if (brief) brief.textContent = pick.description;
+
+      if (meta) {
+        meta.innerHTML = '';
+        meta.append(document.createTextNode(pick.date + (pick.region ? ` | ${pick.region}` : '')));
+
+        const dot1 = document.createElement('span');
+        dot1.className = 'dot';
+        dot1.textContent = '·';
+        meta.append(dot1);
+
+        const handle = document.createElement('span');
+        handle.className = 'handle';
+        handle.textContent = pick.sourceName ?? '';
+        meta.append(handle);
+
+        const dot2 = document.createElement('span');
+        dot2.className = 'dot';
+        dot2.textContent = '·';
+        meta.append(dot2);
+
+        meta.append(document.createTextNode(`${pick.readTime} min`));
+      }
+
+      heroLink.href = `/blog/${pick.id}/`;
+    }
   }
 </script>
