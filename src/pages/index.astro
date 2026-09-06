@@ -24,7 +24,19 @@ const orderedPosts = breakingPost
   ? [breakingPost, ...posts.filter((p) => p.id !== breakingPost.id)]
   : posts;
 
-const [top, second, third, ...sidebarRest] = orderedPosts;
+// The hero also requires an image — a text-only lead looks broken next to
+// every other slot on the page having a photo. Skip ahead (in the same
+// breaking-first, then recency order above) to the first candidate that
+// actually has one; whatever gets skipped isn't lost, it just falls back
+// into the normal secondary/sidebar order below instead of leading. Only
+// falls back to an image-less post if literally nothing published has an
+// image yet, so the homepage still has something to show.
+const heroIndex = orderedPosts.findIndex((p) => p.data.image);
+const topIndex = heroIndex === -1 ? 0 : heroIndex;
+const top = orderedPosts[topIndex];
+const rest = [...orderedPosts.slice(0, topIndex), ...orderedPosts.slice(topIndex + 1)];
+
+const [second, third, ...sidebarRest] = rest;
 const secondaries = [second, third].filter(Boolean);
 
 // Fills the gap on desktop where the sidebar list runs longer than the
