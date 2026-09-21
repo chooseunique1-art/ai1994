@@ -8,23 +8,17 @@ interface Props {
 }
 const { title, description = 'Automated content pipeline test.', articleCategory } = Astro.props;
 
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-const searchIndex = (await getCollection('blog', ({ data }) => data.status === 'published'))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .map((post) => ({
-    id: post.id,
-    title: post.data.title,
-    description: post.data.description,
-    date: fmt(post.data.pubDate),
-    source: post.data.sourceName,
-    region: post.data.region ?? null,
-    pubDate: post.data.pubDate.toISOString(),
-  }));
-const searchIndexJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
-
-const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r is string => Boolean(r)))].sort(
-  (a, b) => a.localeCompare(b)
-);
+// Only region names are needed here for the nav menu — the full
+// per-article index (title/description/etc, used by search and the
+// "keep reading" feed) now lives at /search-index.json, fetched by the
+// client instead of being embedded on every page.
+const menuRegions = [
+  ...new Set(
+    (await getCollection('blog', ({ data }) => data.status === 'published'))
+      .map((post) => post.data.region)
+      .filter((r): r is string => Boolean(r))
+  ),
+].sort((a, b) => a.localeCompare(b));
 ---
 
 <!doctype html>
@@ -1394,7 +1388,28 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       <slot />
     </div>
 
-    <script type="application/json" data-search-index set:html={searchIndexJson} />
+    <script>
+      // Shared search/related-articles index. Fetched once per page load
+      // from the static /search-index.json endpoint (built once at build
+      // time) rather than being inlined into every page's HTML — this is
+      // what this script and the article page's "keep reading" script
+      // both read from. Cached on `window` so multiple consumers on the
+      // same page share one fetch.
+      declare global {
+        interface Window {
+          __searchIndexPromise?: Promise<any[]>;
+        }
+      }
+      function getSearchIndex(): Promise<any[]> {
+        if (!window.__searchIndexPromise) {
+          window.__searchIndexPromise = fetch('/search-index.json')
+            .then((res) => (res.ok ? res.json() : []))
+            .catch(() => []);
+        }
+        return window.__searchIndexPromise;
+      }
+      (window as any).getSearchIndex = getSearchIndex;
+    </script>
 
     <script>
       const headerDatetime = document.querySelector<HTMLElement>('[data-header-datetime]');
@@ -1457,7 +1472,6 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
       const menuPanel = document.querySelector<HTMLElement>('[data-menu-panel]');
       const input = document.querySelector<HTMLInputElement>('[data-search-input]');
       const results = document.querySelector<HTMLUListElement>('[data-search-results]');
-      const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
 
       type SearchPost = { id: string; title: string; description: string; date: string; source: string };
 
@@ -1491,9 +1505,12 @@ const menuRegions = [...new Set(searchIndex.map((p) => p.region).filter((r): r i
         });
       }
 
-      if (input && results && indexTag) {
-        const posts: SearchPost[] = JSON.parse(indexTag.textContent || '[]');
+      if (input && results) {
         const MAX_RESULTS = 8;
+        let posts: SearchPost[] = [];
+        (window as any).getSearchIndex?.().then((data: SearchPost[]) => {
+          posts = data || [];
+        });
 
         const render = (matches: SearchPost[], query: string) => {
           results.innerHTML = '';

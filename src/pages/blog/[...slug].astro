@@ -248,7 +248,6 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
   });
 
   const feed = document.querySelector<HTMLElement>('[data-story-feed]');
-  const indexTag = document.querySelector<HTMLScriptElement>('[data-search-index]');
 
   type IndexedPost = {
     id: string;
@@ -287,8 +286,8 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
     return score;
   };
 
-  if (feed && indexTag) {
-    const posts: IndexedPost[] = JSON.parse(indexTag.textContent || '[]');
+  if (feed) {
+    (window as any).getSearchIndex?.().then((posts: IndexedPost[]) => {
     const loadedIds = new Set<string>([feed.dataset.currentId || '']);
     let chainAnchorId = feed.dataset.currentId || '';
     let loading = false;
@@ -385,5 +384,6 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
 
     urlObserver.observe(document.querySelector('[data-story]')!);
     sentinelObserver.observe(feed.querySelector('[data-sentinel]')!);
+    });
   }
 </script>
