@@ -1508,8 +1508,33 @@ const menuRegions = [
       if (input && results) {
         const MAX_RESULTS = 8;
         let posts: SearchPost[] = [];
+
+        const runSearch = () => {
+          const query = input.value.trim().toLowerCase();
+
+          if (!query) {
+            results.hidden = true;
+            results.innerHTML = '';
+            return;
+          }
+
+          const matches = posts.filter(
+            (post) =>
+              post.title.toLowerCase().includes(query) || post.description.toLowerCase().includes(query)
+          );
+
+          render(matches, input.value.trim());
+          results.hidden = false;
+        };
+
+        // The article list now loads in the background (see getSearchIndex
+        // in the script above) instead of being embedded directly in the
+        // page, so it may still be loading when someone starts typing.
+        // Re-run whatever search is currently active once it arrives,
+        // rather than leaving a "no matches" result stuck on screen.
         (window as any).getSearchIndex?.().then((data: SearchPost[]) => {
           posts = data || [];
+          if (input.value.trim()) runSearch();
         });
 
         const render = (matches: SearchPost[], query: string) => {
@@ -1542,23 +1567,7 @@ const menuRegions = [
           }
         };
 
-        input.addEventListener('input', () => {
-          const query = input.value.trim().toLowerCase();
-
-          if (!query) {
-            results.hidden = true;
-            results.innerHTML = '';
-            return;
-          }
-
-          const matches = posts.filter(
-            (post) =>
-              post.title.toLowerCase().includes(query) || post.description.toLowerCase().includes(query)
-          );
-
-          render(matches, input.value.trim());
-          results.hidden = false;
-        });
+        input.addEventListener('input', runSearch);
 
         input.addEventListener('keydown', (event) => {
           if (event.key === 'ArrowDown' && !results.hidden) {
