@@ -1391,10 +1391,15 @@ const menuRegions = [
     <script>
       // Shared search/related-articles index. Fetched once per page load
       // from the static /search-index.json endpoint (built once at build
-      // time) rather than being inlined into every page's HTML — this is
-      // what this script and the article page's "keep reading" script
-      // both read from. Cached on `window` so multiple consumers on the
-      // same page share one fetch.
+      // time) rather than being inlined into every page's HTML. Defined
+      // inline in THIS script (not a separate <script> tag) because Astro
+      // bundles each script as its own module and does not guarantee they
+      // run in source order — a separate definition script previously
+      // sometimes loaded after the script that called it, silently doing
+      // nothing (no error, just an empty search every time). The article
+      // page's "keep reading" script has its own identical copy of this
+      // function for the same reason; both still share one fetch via the
+      // window-level cache below when both are present on a page.
       declare global {
         interface Window {
           __searchIndexPromise?: Promise<any[]>;
@@ -1408,10 +1413,7 @@ const menuRegions = [
         }
         return window.__searchIndexPromise;
       }
-      (window as any).getSearchIndex = getSearchIndex;
-    </script>
 
-    <script>
       const headerDatetime = document.querySelector<HTMLElement>('[data-header-datetime]');
       if (headerDatetime) {
         const fmt = new Intl.DateTimeFormat('en-GB', {
@@ -1532,7 +1534,7 @@ const menuRegions = [
         // page, so it may still be loading when someone starts typing.
         // Re-run whatever search is currently active once it arrives,
         // rather than leaving a "no matches" result stuck on screen.
-        (window as any).getSearchIndex?.().then((data: SearchPost[]) => {
+        getSearchIndex().then((data: SearchPost[]) => {
           posts = data || [];
           if (input.value.trim()) runSearch();
         });

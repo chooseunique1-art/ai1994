@@ -176,6 +176,28 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
   // of the response, so injected stories are pixel-identical to visiting
   // that URL directly and pick up any future markup/style changes for free.
 
+  // Shared search/related-articles index, fetched once from the static
+  // /search-index.json endpoint. Defined locally in this script (rather
+  // than relying on Base.astro's copy via `window.getSearchIndex`)
+  // because Astro bundles each <script> tag as its own independent
+  // module and does not guarantee they run in source order — relying on
+  // another script to define this first previously caused this feed to
+  // silently find nothing to load. Both copies still share one network
+  // request via the same window-level cache when both are present.
+  declare global {
+    interface Window {
+      __searchIndexPromise?: Promise<any[]>;
+    }
+  }
+  function getSearchIndex(): Promise<any[]> {
+    if (!window.__searchIndexPromise) {
+      window.__searchIndexPromise = fetch('/search-index.json')
+        .then((res) => (res.ok ? res.json() : []))
+        .catch(() => []);
+    }
+    return window.__searchIndexPromise;
+  }
+
   // Google Preferred Sources — manual/advanced integration (see
   // Base.astro's script tag). Google's script pushes a `preferredSource`
   // API object through this queue once it's loaded; stash it so the
@@ -287,7 +309,7 @@ const preferredSourceDeeplink = `https://www.google.com/preferences/source?q=${e
   };
 
   if (feed) {
-    (window as any).getSearchIndex?.().then((posts: IndexedPost[]) => {
+    getSearchIndex().then((posts: IndexedPost[]) => {
     const loadedIds = new Set<string>([feed.dataset.currentId || '']);
     let chainAnchorId = feed.dataset.currentId || '';
     let loading = false;
