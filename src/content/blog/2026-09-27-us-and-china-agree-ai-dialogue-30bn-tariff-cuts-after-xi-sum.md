@@ -1,0 +1,15 @@
+---
+title: "US and China agree AI dialogue, $30bn tariff cuts after Xi summit"
+description: "The United States and China have agreed to launch a formal dialogue on artificial intelligence and to cut tariffs on thirty billion dollars' worth of goods in each direction, following a three-day sum"
+pubDate: 2026-09-27T06:15:06.058Z
+status: "published"
+region: "World"
+image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/President_Donald_Trump_greets_Chinese_President_Xi_Jinping_before_a_bilateral_meeting_at_the_Gimhae_International_Airport_terminal_%2854890669668%29.jpg"
+breaking: false
+---
+
+The United States and China have agreed to launch a formal dialogue on artificial intelligence and to cut tariffs on thirty billion dollars' worth of goods in each direction, following a three-day summit between President Donald Trump and Chinese President Xi Jinping that concluded without major public fanfare.  The White House said the two sides had reached consensus on more favourable tariff treatment for what it called non-sensitive goods, with American exporters of agricultural products, wood, and cosmetics set to benefit on one side, and Chinese exporters of small appliances, toys, and decorations gaining relief on the other.  On artificial intelligence, the two governments agreed to hold their first round of formal talks in November, focused on managing the technology's risks as well as its economic benefits, and to set up a dedicated channel for handling AI-related incidents between the two countries.  In a symbolic touch, the two leaders reportedly agreed to adopt the term "super intelligence" in place of "artificial intelligence" in their official exchanges going forward.
+
+Beyond the AI and tariff announcements, the two sides agreed to establish a joint trade council and to extend the outcomes of their earlier negotiations in Kuala Lumpur, building on a period of gradually thawing trade relations after years of tit-for-tat tariff escalation.  They also granted a two-month extension to an existing trade truce due to expire on November 10, buying more time to negotiate a broader settlement without an immediate tariff snapback.  Trump and Xi additionally agreed to attend the APEC and G20 summits to be hosted by each other's countries, a gesture suggesting both sides want to keep high-level engagement going despite unresolved disputes.  Officials also indicated some measure of agreement around Iran's nuclear commitments and international waterway access, linking the US-China economic track to broader geopolitical issues playing out elsewhere, including the Gulf.
+
+Rather than a comprehensive trade deal, the summit's outcome looked more like an exercise in stabilising the relationship through smaller, concrete steps, a pattern that has repeated across several rounds of US-China talks over the past two years.  For India, a more stable US-China trade relationship carries mixed implications, potentially easing global supply-chain uncertainty even as it reduces the tariff-driven incentive for manufacturers to shift production away from China toward alternative hubs such as India.
