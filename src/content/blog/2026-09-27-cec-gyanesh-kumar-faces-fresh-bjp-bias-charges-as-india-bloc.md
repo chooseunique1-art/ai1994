@@ -1,0 +1,15 @@
+---
+title: "CEC Gyanesh Kumar faces fresh BJP-bias charges as INDIA bloc plans stir"
+description: "The controversy around Chief Election Commissioner Gyanesh Kumar's impartiality has escalated sharply, with fresh allegations from a retired bureaucrat compounding weeks of opposition pressure over th"
+pubDate: 2026-09-27T05:55:06.143Z
+status: "published"
+region: "India"
+image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/The_Chief_Election_Commissioner_of_India%2C_Sh._Gyanesh_Kumar.jpg"
+breaking: true
+---
+
+The controversy around Chief Election Commissioner Gyanesh Kumar's impartiality has escalated sharply, with fresh allegations from a retired bureaucrat compounding weeks of opposition pressure over the Special Intensive Revision of electoral rolls.  Former Kerala Chief Secretary Jiji Thomson has claimed that Kumar, then a senior IAS officer, approached him aboard a flight to Delhi in 2016 and asked why he did not contest elections on a BJP ticket, reportedly telling him he could become a Union minister if he won.  Congress leader Rahul Gandhi seized on the claim, alleging Kumar was "used to recruit for the BJP" as a bureaucrat before being appointed to head the Election Commission, and accusing the government of putting him "in charge of match-fixing" the country's elections.  AIMIM chief Asaduddin Owaisi separately described the SIR exercise itself as a "backdoor NRC," arguing that voter data collected through the revision could eventually be repurposed to roll out a National Register of Citizens and warning citizens could later be made to produce documents to prove their status.
+
+West Bengal Chief Minister Mamata Banerjee added her voice to calls for Kumar's removal and for scrapping the SIR-linked voter list, while some Congress leaders went further and demanded his arrest.  The charges follow earlier reporting that the two other Election Commissioners, Sukhbir Singh Sandhu and Vivek Joshi, raised at least fourteen formal objections over roughly ten months about how the SIR process was run, including complaints that decisions were taken without their knowledge, that Form 6 for new voter registrations was altered, and that access to the central electoral database was being increasingly centralised.  In at least one instance, in Goa, the commissioners said software changes prevented officials from recording the eligibility of voters already approved by local registration officers.  The Election Commission has pushed back, stating every SIR-related decision was taken unanimously by all three commissioners and that a disputed letter to the Cabinet Secretary was procedural and unrelated to policy, adding that the Supreme Court has separately upheld the exercise.
+
+Opposition parties under the INDIA bloc banner have called a coordination meeting in Delhi on September 30 specifically to plan an intensified campaign against the Commission.  The dispute has become one of the most sustained challenges to an Election Commission's credibility in recent years, feeding into parallel opposition demands over alleged Form 6 irregularities and the poll body's accountability to Parliament.
