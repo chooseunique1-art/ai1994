@@ -1,0 +1,14 @@
+---
+title: "Heavy rain kills 10, floods 63 Uttar Pradesh districts"
+description: "Torrential monsoon rain has killed at least ten people and injured seventeen others across Uttar Pradesh, with sixty-three of the state's districts recording rainfall well above normal levels over a 2"
+pubDate: 2026-09-27T06:00:06.282Z
+status: "published"
+region: "India"
+breaking: true
+---
+
+Torrential monsoon rain has killed at least ten people and injured seventeen others across Uttar Pradesh, with sixty-three of the state's districts recording rainfall well above normal levels over a 24-hour period.  Officials attributed the deaths mainly to the collapse of mud walls and homes weakened by prolonged rain, along with fatalities from falling and uprooted trees, with the worst-hit districts including Lakhimpur Kheri, Amethi, Barabanki, and Gorakhpur.  Rainfall data showed extraordinary local extremes, with Farrukhabad recording roughly two hundred times its normal rainfall for the period and Kanpur Nagar and Kannauj not far behind, while towns such as Banda, Fatehgarh, and Lucknow logged totals ranging from around 125 to more than 225 millimetres.  The downpour damaged or destroyed at least 117 houses and caused significant harm to standing crops, compounding losses for farmers already contending with an erratic monsoon season.
+
+Widespread waterlogging and power outages were reported in urban centres including Lucknow, Kanpur, Farrukhabad, and Hardoi, disrupting daily life and transport.  State authorities placed district magistrates on high alert in the worst-affected areas and ordered schools shut in zones under a red weather warning.  Fire services, disaster-response teams, and other rescue personnel were mobilised to assist in low-lying and flood-prone localities, and a dedicated helpline was activated for residents needing emergency assistance.  The Chief Minister directed officials to keep close watch on vulnerable sites, including riverbanks and low-lying colonies, and ordered enhanced monitoring of rivers near the Nepal border, where upstream rain can quickly worsen flooding downstream in Uttar Pradesh.
+
+The India Meteorological Department has forecast continued heavy rain, thunderstorms, and lightning over the coming days across the state's central and Terai regions, along with a light-to-moderate risk of flash flooding.  Officials described the excess as roughly nineteen times the seasonal average across the state, underscoring how an unusually active monsoon spell has strained drainage and disaster-response systems even in districts not traditionally seen as flood-prone.  The scale of destruction has renewed scrutiny of urban drainage infrastructure in cities such as Kanpur and Lucknow, which recorded some of the heaviest rainfall despite being major administrative centres.
