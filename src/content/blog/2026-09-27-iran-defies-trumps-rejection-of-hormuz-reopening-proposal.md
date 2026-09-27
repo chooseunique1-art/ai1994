@@ -1,0 +1,15 @@
+---
+title: "Iran defies Trump's rejection of Hormuz reopening proposal"
+description: "Iran has struck a defiant tone after President Donald Trump rejected Tehran's proposal to reopen the Strait of Hormuz within seven days, with senior officials declaring they will make no further conce"
+pubDate: 2026-09-27T06:10:06.199Z
+status: "published"
+region: "Middle East"
+image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Strait_of_Hormuz_and_Musandam_Peninsula_%28MODIS_2018-12-10%29.jpg"
+breaking: true
+---
+
+Iran has struck a defiant tone after President Donald Trump rejected Tehran's proposal to reopen the Strait of Hormuz within seven days, with senior officials declaring they will make no further concessions despite the setback.  Foreign Minister Abbas Araghchi had put forward the seven-day plan on condition that hostilities across the wider Middle East, including in Lebanon and Yemen, be halted, that Iran's frozen assets be released, that oil sanctions be lifted, and that the United States end its naval blockade of Iranian waters.  Trump dismissed the offer, suggesting Iran wanted the strait reopened quickly "because they're losing so badly," while still signalling some openness to a broader deal on his own terms.  Araghchi insisted Iran has "never backed down from our rights" and said Tehran was awaiting a formal, mediated response before deciding its next move.
+
+President Masoud Pezeshkian struck a similarly uncompromising note, saying Iran had not walked away from the negotiating table but "no longer trusts" Washington, a sentiment he repeated in stronger terms at the United Nations, where he vowed the country would "never bow our head. " A spokesman for Iran's Revolutionary Guards went further, declaring Tehran would "not cease punishing" the United States until all seven of its conditions were met, underscoring the military's role in shaping the country's negotiating posture.  Officials in Tehran have also ruled out any nuclear concessions as part of a settlement, keeping that issue outside the scope of talks over the strait and the wider conflict.  The Strait of Hormuz remains one of the world's most strategically important oil chokepoints, and continued uncertainty over its status carries direct implications for global energy prices and shipping costs, including for major crude importers such as India that rely heavily on Gulf supply routes.
+
+The stand-off comes against the backdrop of a war between Iran and its adversaries that has now stretched on for more than 200 days, with both sides continuing to trade military and diplomatic pressure without a resolution in sight.  Regional actors, including Saudi Arabia, have continued to report interceptions of missiles and drones linked to the wider conflict, illustrating how the confrontation keeps drawing in other Gulf states even as Iran and the United States remain the central protagonists.  Mediators involved in the on-and-off talks have not indicated when, or whether, a formal US response to Araghchi's seven conditions will be delivered, leaving the truce process in limbo for now.
