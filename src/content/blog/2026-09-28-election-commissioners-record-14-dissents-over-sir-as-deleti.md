@@ -1,0 +1,15 @@
+---
+title: "Election Commissioners Record 14 Dissents Over SIR as Deletions Cross 13 Crore"
+description: "The Special Intensive Revision of India's electoral rolls is facing scrutiny from within the Election Commission itself, with commissioners Sukhbir Singh Sandhu and Vivek Joshi reported to have formal"
+pubDate: 2026-09-28T08:30:06.789Z
+status: "published"
+region: "India"
+image: "https://upload.wikimedia.org/wikipedia/commons/b/b7/A_media_person_passing_on_the_update_results_of_General_Election-2009%2C_to_his_organisation_from_the_Electronic_Digital_Display_Board_at_the_office_of_the_Election_Commission_of_India%2C_at_Nirvachan_Sadan%2C_in_New_Delhi.jpg"
+breaking: true
+---
+
+The Special Intensive Revision of India's electoral rolls is facing scrutiny from within the Election Commission itself, with commissioners Sukhbir Singh Sandhu and Vivek Joshi reported to have formally recorded fourteen separate objections over how the exercise has been conducted.  Their dissent notes reportedly focus on voter registration protocols, the process used to remove names from the rolls, and how appeals seeking restoration of deleted names have been handled, suggesting disagreement within the commission's own leadership over the SIR's implementation.  The scale of the exercise has grown significant enough to draw national attention, with more than 13 crore names now reported to have been deleted from electoral rolls across 30 states and union territories, and Delhi and Maharashtra recording the highest volumes of deletions.  Congress has separately criticised the Election Commission's official response to concerns about the SIR, describing it as an exercise in "damage control" that leaves core questions about the deletions unaddressed.
+
+Samajwadi Party leader Akhilesh Yadav has publicly called on the Supreme Court to take up the matter through a suo motu inquiry, arguing that the scale of the deletions poses a threat to the integrity of future elections.  Congress MP Manish Tewari has gone further, alleging that the Commission's administrative decisions during the revision may have been influenced by considerations outside its own stated procedures.  Political leaders across the opposition have increasingly framed the judiciary as the only forum likely to bring clarity to the SIR's legal and procedural standing, given that the Commission has so far resisted calls to pause or roll back the exercise.  The dissent from within the Commission adds an unusual dimension to the controversy, since public disagreement among sitting election commissioners over an active revision exercise is rare in India's electoral history.
+
+The Commission has not issued a detailed public rebuttal to the reported internal objections at the time of this report.  The developments come against the backdrop of a broader national debate this year over the CEC's handling of the SIR, which has already prompted street protests, court petitions and repeated opposition demands for the process to be paused or independently audited.
