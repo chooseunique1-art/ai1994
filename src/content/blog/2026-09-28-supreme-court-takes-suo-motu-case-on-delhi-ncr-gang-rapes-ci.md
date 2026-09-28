@@ -1,0 +1,15 @@
+---
+title: "Supreme Court Takes Suo Motu Case on Delhi-NCR Gang-Rapes, Cites Nirbhaya"
+description: "The Supreme Court has taken suo motu cognisance of a spate of recent sexual assault cases in the Delhi-NCR region and directed its registry to formally register a public interest litigation on the mat"
+pubDate: 2026-09-28T08:35:06.335Z
+status: "published"
+region: "User Safety: safe"
+image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Supreme_Court_of_India_01.jpg"
+breaking: true
+---
+
+The Supreme Court has taken suo motu cognisance of a spate of recent sexual assault cases in the Delhi-NCR region and directed its registry to formally register a public interest litigation on the matter.  The bench, comprising Justices J. B.  Pardiwala and K.
+
+Vinod Chandran, was moved to act after two incidents in particular: the alleged gang-rape of a 16-year-old girl by a bus driver and conductor in Greater Noida on August 4, after which she was abandoned at a Delhi bus terminal, and the alleged gang-rape of a 17-year-old girl inside Aastha Kunj park in Kalkaji, south Delhi, on September 21.  In the Kalkaji case, the survivor has told police that three men who approached her and a friend near the park falsely identified themselves as police officers, confiscated their phones, separated the two girls, and then assaulted her at gunpoint in a secluded part of the park on her birthday; all three accused were arrested within days and are now in judicial custody while investigators examine forensic evidence and footage from more than 300 CCTV cameras in the area.  In their order, the judges described the pattern of incidents as a "systemic failure" on the part of law enforcement to keep public spaces safe, and said parks, roads and transit hubs "cannot become high-risk areas" because of poor lighting, weak surveillance or lapses in patrolling.  The bench explicitly invoked the 2012 Nirbhaya case, the gang-rape and murder of a young woman aboard a moving bus in Delhi that had prompted sweeping changes to India's sexual-assault laws, warning that the recurrence of similar attacks in the capital region more than a decade later points to unresolved gaps in enforcement.
+
+The court said authorities must be held to a "measurable response" standard and that officials should be accountable for concrete steps taken, or not taken, to prevent such crimes and protect vulnerable groups, particularly women and minors, in public areas.  Delhi Police have separately opened a safety audit of parks across the city in the wake of the Kalkaji case, and investigators are examining whether the three accused may be linked to any other assaults in the area.  The PIL registered by the court's own registry marks the formal start of judicial proceedings, though the order does not yet specify what directions, if any, will be issued to the Delhi government or police in the near term.  The case has reignited public debate in the capital over recurring failures in urban safety infrastructure more than a decade after the Nirbhaya case prompted nationwide protests and legal reform.
