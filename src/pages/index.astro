@@ -69,10 +69,15 @@ const RECENT_POOL = 30;
 const BREAKING_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 const now = Date.now();
 
-const recentBreaking = posts.filter(
+// Trending is a visual grid of thumbnails — an image-less card would just
+// be a bare headline next to five photos, so image-bearing posts are the
+// only eligible pool, same as the hero above.
+const postsWithImage = posts.filter((p) => p.data.image);
+
+const recentBreaking = postsWithImage.filter(
   (p) => p.data.breaking && now - p.data.pubDate.valueOf() <= BREAKING_WINDOW_MS
 );
-const recentPosts = posts.slice(0, RECENT_POOL);
+const recentPosts = postsWithImage.slice(0, RECENT_POOL);
 
 const trendingPoolMap = new Map(
   [...recentBreaking, ...recentPosts].map((p) => [p.id, p])
